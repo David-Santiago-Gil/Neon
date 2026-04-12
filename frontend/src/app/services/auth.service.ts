@@ -2,6 +2,7 @@ import { Injectable, inject, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface AuthResponse {
   message: string;
@@ -21,8 +22,8 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // URL del backend - cambia en producción
-  private readonly apiUrl = 'http://localhost:3000/api';
+  // URL del backend - provista por el entorno
+  private readonly apiUrl = environment.apiUrl;
 
   currentUser = signal<any>(null);
   isAuthenticated = signal(false);
