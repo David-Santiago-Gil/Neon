@@ -1,0 +1,231 @@
+<!-- LOGIN MODAL -->
+@if (showLogin()) {
+<div class="usuarios-overlay" (click)="onOverlayClick($event)">
+  <div class="futuristic-container">
+    <!-- Anillo exterior giratorio -->
+    <div class="orbit-ring orbit-outer">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+      <div class="orbit-dot dot-4"></div>
+      <div class="orbit-dot dot-5"></div>
+      <div class="orbit-dot dot-6"></div>
+    </div>
+    <!-- Anillo medio contra-rotando -->
+    <div class="orbit-ring orbit-middle">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+      <div class="orbit-dot dot-4"></div>
+    </div>
+    <!-- Anillo interior -->
+    <div class="orbit-ring orbit-inner">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+    </div>
+    <!-- Pulso de glow -->
+    <div class="glow-pulse"></div>
+
+    <!-- Formulario Central -->
+    <div class="glass-form" [class.loading]="isLoading()" [class.success]="loginSuccess()">
+      <button class="close-btn" (click)="closeLogin.emit()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      @if (loginSuccess()) {
+        <div class="success-state">
+          <div class="success-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <h2>ACCESO CONCEDIDO</h2>
+          <p>Bienvenido al sistema</p>
+        </div>
+      } @else {
+        <div class="form-header">
+          <div class="form-icon">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <h2 class="form-title">ACCESO EXCLUSIVO</h2>
+          <p class="form-subtitle">Ingresa tus credenciales</p>
+        </div>
+
+        @if (loginServerError()) {
+          <div class="server-error">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>{{loginServerError()}}</span>
+          </div>
+        }
+
+        <form class="auth-form">
+          <div class="input-group" [class.has-error]="loginErrors().user">
+            <div class="input-icon"><i class="bi bi-person-fill"></i></div>
+            <input type="text" [value]="loginData.user()"
+              (input)="loginData.user.set($any($event.target).value)"
+              placeholder="USUARIO" autocomplete="username">
+            <div class="input-glow"></div>
+            @if (loginErrors().user) {
+              <span class="field-error">{{loginErrors().user}}</span>
+            }
+          </div>
+          <div class="input-group" [class.has-error]="loginErrors().pass">
+            <div class="input-icon"><i class="bi bi-key-fill"></i></div>
+            <input type="password" [value]="loginData.pass()"
+              (input)="loginData.pass.set($any($event.target).value)"
+              placeholder="CONTRASEÑA" autocomplete="current-password">
+            <div class="input-glow"></div>
+            @if (loginErrors().pass) {
+              <span class="field-error">{{loginErrors().pass}}</span>
+            }
+          </div>
+          <button type="button" class="submit-btn" (click)="autenticar()" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <div class="btn-loader"></div>
+              <span>VERIFICANDO...</span>
+            } @else {
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>AUTENTICAR</span>
+            }
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <span>¿No tienes cuenta?</span>
+          <button class="link-btn" (click)="closeLogin.emit(); switchToRegister.emit()">Crear cuenta</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<!-- REGISTER MODAL -->
+@if (showRegister()) {
+<div class="usuarios-overlay" (click)="onOverlayClick($event)">
+  <div class="futuristic-container register-mode">
+    <!-- Anillo exterior giratorio -->
+    <div class="orbit-ring orbit-outer">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+      <div class="orbit-dot dot-4"></div>
+      <div class="orbit-dot dot-5"></div>
+      <div class="orbit-dot dot-6"></div>
+    </div>
+    <!-- Anillo medio contra-rotando -->
+    <div class="orbit-ring orbit-middle">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+      <div class="orbit-dot dot-4"></div>
+    </div>
+    <!-- Anillo interior -->
+    <div class="orbit-ring orbit-inner">
+      <div class="orbit-dot dot-1"></div>
+      <div class="orbit-dot dot-2"></div>
+      <div class="orbit-dot dot-3"></div>
+    </div>
+    <!-- Pulso de glow -->
+    <div class="glow-pulse"></div>
+
+    <!-- Formulario Central -->
+    <div class="glass-form glass-form-register" [class.loading]="isLoading()" [class.success]="registerSuccess()">
+      <button class="close-btn" (click)="closeRegister.emit()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      @if (registerSuccess()) {
+        <div class="success-state">
+          <div class="success-icon register-success-icon">
+            <i class="bi bi-person-check-fill"></i>
+          </div>
+          <h2>CUENTA CREADA</h2>
+          <p>Tu acceso VIP está listo</p>
+        </div>
+      } @else {
+        <div class="form-header">
+          <div class="form-icon register-icon">
+            <i class="bi bi-person-plus-fill"></i>
+          </div>
+          <h2 class="form-title">REGISTRO VIP</h2>
+          <p class="form-subtitle">Crea tu cuenta exclusiva</p>
+        </div>
+
+        @if (regServerError()) {
+          <div class="server-error">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>{{regServerError()}}</span>
+          </div>
+        }
+
+        <form class="auth-form">
+          <div class="input-group" [class.has-error]="regErrors().name">
+            <div class="input-icon"><i class="bi bi-person-fill"></i></div>
+            <input type="text" [value]="regData.name()"
+              (input)="regData.name.set($any($event.target).value)"
+              placeholder="NOMBRE COMPLETO" autocomplete="name">
+            <div class="input-glow"></div>
+            @if (regErrors().name) {
+              <span class="field-error">{{regErrors().name}}</span>
+            }
+          </div>
+          <div class="input-group" [class.has-error]="regErrors().email">
+            <div class="input-icon"><i class="bi bi-envelope-fill"></i></div>
+            <input type="email" [value]="regData.email()"
+              (input)="regData.email.set($any($event.target).value)"
+              placeholder="CORREO ELECTRÓNICO" autocomplete="email">
+            <div class="input-glow"></div>
+            @if (regErrors().email) {
+              <span class="field-error">{{regErrors().email}}</span>
+            }
+          </div>
+          <div class="input-group" [class.has-error]="regErrors().user">
+            <div class="input-icon"><i class="bi bi-at"></i></div>
+            <input type="text" [value]="regData.user()"
+              (input)="regData.user.set($any($event.target).value)"
+              placeholder="USUARIO" autocomplete="username">
+            <div class="input-glow"></div>
+            @if (regErrors().user) {
+              <span class="field-error">{{regErrors().user}}</span>
+            }
+          </div>
+          <div class="input-group" [class.has-error]="regErrors().pass">
+            <div class="input-icon"><i class="bi bi-key-fill"></i></div>
+            <input type="password" [value]="regData.pass()"
+              (input)="regData.pass.set($any($event.target).value)"
+              placeholder="CONTRASEÑA" autocomplete="new-password">
+            <div class="input-glow"></div>
+            @if (regErrors().pass) {
+              <span class="field-error">{{regErrors().pass}}</span>
+            }
+          </div>
+          <div class="input-group" [class.has-error]="regErrors().confirmPass">
+            <div class="input-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <input type="password" [value]="regData.confirmPass()"
+              (input)="regData.confirmPass.set($any($event.target).value)"
+              placeholder="CONFIRMAR CONTRASEÑA" autocomplete="new-password">
+            <div class="input-glow"></div>
+            @if (regErrors().confirmPass) {
+              <span class="field-error">{{regErrors().confirmPass}}</span>
+            }
+          </div>
+          <button type="button" class="submit-btn register-btn" (click)="crearCuenta()" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <div class="btn-loader"></div>
+              <span>PROCESANDO...</span>
+            } @else {
+              <i class="bi bi-rocket-takeoff-fill"></i>
+              <span>CREAR CUENTA VIP</span>
+            }
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <span>¿Ya tienes cuenta?</span>
+          <button class="link-btn" (click)="closeRegister.emit(); switchToLogin.emit()">Iniciar sesión</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+}

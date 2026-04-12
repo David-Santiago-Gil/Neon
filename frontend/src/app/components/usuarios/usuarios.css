@@ -1,0 +1,747 @@
+/* ===================================================
+   COMPONENTE USUARIOS - DISEÑO FUTURISTA GOLD/NEON
+   Paleta unificada: Gold #C9A84C / #d4af37 / #E2C87A
+   =================================================== */
+
+/* OVERLAY */
+.usuarios-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: overlayFadeIn 0.4s ease;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* CONTENEDOR FUTURISTA */
+.futuristic-container {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: containerAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.futuristic-container.register-mode {
+  width: 560px;
+  height: 620px;
+}
+
+@keyframes containerAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* ===================================================
+   ANILLOS ORBITALES — PALETA GOLD
+   =================================================== */
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+/* Anillo Exterior */
+.orbit-outer {
+  width: 100%;
+  height: 100%;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#0b0b0f, #0b0b0f) padding-box,
+    conic-gradient(
+      from 0deg,
+      #C9A84C 0%,
+      transparent 15%,
+      #E2C87A 25%,
+      transparent 40%,
+      #d4af37 50%,
+      transparent 65%,
+      #C9A84C 75%,
+      transparent 90%,
+      #E2C87A 100%
+    ) border-box;
+  animation: spinClockwise 8s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.35));
+}
+
+.orbit-outer::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(transparent, transparent) padding-box,
+    conic-gradient(
+      from 180deg,
+      rgba(201, 168, 76, 0.2) 0%,
+      transparent 25%,
+      rgba(226, 200, 122, 0.15) 50%,
+      transparent 75%,
+      rgba(201, 168, 76, 0.2) 100%
+    ) border-box;
+}
+
+/* Anillo Medio */
+.orbit-middle {
+  width: 88%;
+  height: 88%;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#0b0b0f, #0b0b0f) padding-box,
+    conic-gradient(
+      from 90deg,
+      #E2C87A 0%,
+      transparent 20%,
+      #C9A84C 35%,
+      transparent 55%,
+      #d4af37 70%,
+      transparent 90%,
+      #E2C87A 100%
+    ) border-box;
+  animation: spinCounterClockwise 12s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.25));
+}
+
+/* Anillo Interior */
+.orbit-inner {
+  width: 76%;
+  height: 76%;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b0b0f, #0b0b0f) padding-box,
+    conic-gradient(
+      from 45deg,
+      #d4af37 0%,
+      transparent 15%,
+      #C9A84C 30%,
+      transparent 50%,
+      #E2C87A 65%,
+      transparent 85%,
+      #d4af37 100%
+    ) border-box;
+  animation: spinClockwise 15s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(201, 168, 76, 0.3));
+}
+
+/* PUNTOS ORBITALES */
+.orbit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C9A84C;
+  box-shadow: 0 0 12px #C9A84C, 0 0 24px rgba(201, 168, 76, 0.5);
+}
+
+.orbit-outer .orbit-dot { animation: dotPulse 2s ease-in-out infinite; }
+.orbit-middle .orbit-dot {
+  width: 5px;
+  height: 5px;
+  background: #E2C87A;
+  box-shadow: 0 0 10px #E2C87A, 0 0 20px rgba(226, 200, 122, 0.5);
+  animation: dotPulse 2.5s ease-in-out infinite;
+}
+.orbit-inner .orbit-dot {
+  width: 4px;
+  height: 4px;
+  background: #d4af37;
+  box-shadow: 0 0 8px #d4af37, 0 0 16px rgba(212, 175, 55, 0.5);
+  animation: dotPulse 3s ease-in-out infinite;
+}
+
+/* Posiciones de los puntos */
+.orbit-outer .dot-1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
+.orbit-outer .dot-2 { top: 14%; right: 3%; transform: translate(50%, -50%); }
+.orbit-outer .dot-3 { bottom: 14%; right: 3%; transform: translate(50%, 50%); }
+.orbit-outer .dot-4 { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+.orbit-outer .dot-5 { bottom: 14%; left: 3%; transform: translate(-50%, 50%); }
+.orbit-outer .dot-6 { top: 14%; left: 3%; transform: translate(-50%, -50%); }
+
+.orbit-middle .dot-1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
+.orbit-middle .dot-2 { top: 50%; right: 0; transform: translate(50%, -50%); }
+.orbit-middle .dot-3 { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+.orbit-middle .dot-4 { top: 50%; left: 0; transform: translate(-50%, -50%); }
+
+.orbit-inner .dot-1 { top: 5%; right: 12%; }
+.orbit-inner .dot-2 { bottom: 5%; left: 50%; transform: translateX(-50%); }
+.orbit-inner .dot-3 { top: 50%; left: 2%; transform: translateY(-50%); }
+
+/* Delays para animación orgánica */
+.orbit-dot.dot-2 { animation-delay: 0.3s; }
+.orbit-dot.dot-3 { animation-delay: 0.6s; }
+.orbit-dot.dot-4 { animation-delay: 0.9s; }
+.orbit-dot.dot-5 { animation-delay: 1.2s; }
+.orbit-dot.dot-6 { animation-delay: 1.5s; }
+
+/* PULSO GLOW */
+.glow-pulse {
+  position: absolute;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(201, 168, 76, 0.08) 0%,
+    rgba(212, 175, 55, 0.04) 40%,
+    transparent 70%
+  );
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* ===================================================
+   ANIMACIONES PRINCIPALES
+   =================================================== */
+
+@keyframes spinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinCounterClockwise {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* ===================================================
+   FORMULARIO GLASSMORPHISM
+   =================================================== */
+
+.glass-form {
+  position: relative;
+  z-index: 10;
+  width: 340px;
+  padding: 40px 32px 32px;
+  border-radius: 20px;
+  background: rgba(17, 17, 24, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(201, 168, 76, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: formAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  transition: all 0.4s ease;
+}
+
+.glass-form-register {
+  width: 360px;
+  padding: 36px 28px 28px;
+}
+
+.glass-form.loading {
+  border-color: rgba(201, 168, 76, 0.5);
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(201, 168, 76, 0.15);
+}
+
+.glass-form.success {
+  border-color: rgba(201, 168, 76, 0.6);
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(201, 168, 76, 0.2);
+}
+
+@keyframes formAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  z-index: 20;
+}
+
+.close-btn:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.4);
+  color: #C9A84C;
+  transform: rotate(90deg);
+}
+
+/* FORM HEADER */
+.form-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.form-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.15), rgba(212, 175, 55, 0.1));
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C9A84C;
+  font-size: 1.5rem;
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.15);
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+.register-icon {
+  background: linear-gradient(135deg, rgba(226, 200, 122, 0.15), rgba(212, 175, 55, 0.1));
+  border-color: rgba(226, 200, 122, 0.3);
+  color: #E2C87A;
+  box-shadow: 0 0 20px rgba(226, 200, 122, 0.15);
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.form-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #f0f0f0;
+  margin-bottom: 6px;
+}
+
+.form-subtitle {
+  font-size: 0.75rem;
+  color: rgba(240, 240, 240, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* SERVER ERROR */
+.server-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  background: rgba(255, 62, 62, 0.1);
+  border: 1px solid rgba(255, 62, 62, 0.25);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  animation: errorShake 0.4s ease;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* AUTH FORM */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* INPUT GROUP */
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px 14px 46px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  border-radius: 12px;
+  color: #f0f0f0;
+  font-size: 0.88rem;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: rgba(240, 240, 240, 0.25);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.input-group input:focus {
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.03);
+  box-shadow:
+    0 0 0 3px rgba(201, 168, 76, 0.08),
+    0 0 20px rgba(201, 168, 76, 0.08);
+}
+
+.input-group.has-error input {
+  border-color: rgba(255, 62, 62, 0.5);
+  background: rgba(255, 62, 62, 0.03);
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: rgba(201, 168, 76, 0.4);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  z-index: 2;
+}
+
+.input-group:focus-within .input-icon {
+  color: #C9A84C;
+}
+
+.input-group.has-error .input-icon {
+  color: rgba(255, 62, 62, 0.6);
+}
+
+.has-error .input-icon {
+  transform: translateY(calc(-50% - 8px));
+}
+
+.input-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+  transition: width 0.4s ease;
+  border-radius: 2px;
+}
+
+.input-group:focus-within .input-glow {
+  width: 80%;
+}
+
+.field-error {
+  display: block;
+  color: #ff6b6b;
+  font-size: 0.68rem;
+  margin-top: 4px;
+  padding-left: 46px;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  animation: fieldErrorIn 0.3s ease;
+}
+
+@keyframes fieldErrorIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+  width: 100%;
+  padding: 15px 24px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: linear-gradient(135deg, #C9A84C 0%, #d4af37 50%, #E2C87A 100%);
+  background-size: 200% 100%;
+  color: #0b0b0f;
+  box-shadow: 0 8px 32px rgba(201, 168, 76, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(201, 168, 76, 0.45);
+  background-position: 100% 0;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Register button variant — same gold but slightly lighter */
+.register-btn {
+  background: linear-gradient(135deg, #d4af37 0%, #E2C87A 50%, #C9A84C 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+}
+
+.register-btn:hover:not(:disabled) {
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.45);
+}
+
+/* Button Loader */
+.btn-loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(11, 11, 15, 0.3);
+  border-top-color: #0b0b0f;
+  border-radius: 50%;
+  animation: btnSpin 0.8s linear infinite;
+}
+
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* FORM FOOTER */
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.78rem;
+  color: rgba(240, 240, 240, 0.35);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #C9A84C;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.link-btn:hover {
+  color: #E2C87A;
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+}
+
+/* ===================================================
+   SUCCESS STATE
+   =================================================== */
+
+.success-state {
+  text-align: center;
+  padding: 20px 0;
+  animation: successAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.1);
+  border: 2px solid rgba(201, 168, 76, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C9A84C;
+  font-size: 2rem;
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2);
+  animation: successPulse 1.5s ease-in-out infinite;
+}
+
+.register-success-icon {
+  background: rgba(226, 200, 122, 0.1);
+  border-color: rgba(226, 200, 122, 0.35);
+  color: #E2C87A;
+  box-shadow: 0 0 30px rgba(226, 200, 122, 0.2);
+}
+
+@keyframes successAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes successPulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(201, 168, 76, 0.2); }
+  50% { box-shadow: 0 0 50px rgba(201, 168, 76, 0.45); }
+}
+
+.success-state h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #C9A84C;
+  margin-bottom: 8px;
+}
+
+.success-state p {
+  font-size: 0.8rem;
+  color: rgba(240, 240, 240, 0.5);
+  letter-spacing: 1px;
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+
+@media (max-width: 600px) {
+  .futuristic-container {
+    width: 380px;
+    height: 380px;
+  }
+
+  .futuristic-container.register-mode {
+    width: 400px;
+    height: 500px;
+  }
+
+  .glass-form {
+    width: 280px;
+    padding: 32px 24px 24px;
+  }
+
+  .glass-form-register {
+    width: 300px;
+    padding: 28px 20px 20px;
+  }
+
+  .form-title {
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+  }
+
+  .input-group input {
+    padding: 12px 14px 12px 40px;
+    font-size: 0.82rem;
+  }
+
+  .submit-btn {
+    padding: 13px 20px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .futuristic-container {
+    width: 320px;
+    height: 320px;
+  }
+
+  .futuristic-container.register-mode {
+    width: 340px;
+    height: 450px;
+  }
+
+  .glass-form {
+    width: 240px;
+    padding: 28px 18px 18px;
+  }
+
+  .glass-form-register {
+    width: 260px;
+  }
+
+  .form-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .form-title {
+    font-size: 1rem;
+  }
+}

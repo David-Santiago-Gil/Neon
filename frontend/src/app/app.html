@@ -1,0 +1,223 @@
+<app-header (openLogin)="showLogin.set(true)" (openRegister)="showRegister.set(true)"></app-header>
+
+<main>
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">NEON <span class="highlight">ROYALE</span></h1>
+            <p class="hero-subtitle">The Ultimate Gaming Distinction</p>
+            <div class="hero-buttons">
+                <button class="btn btn-luxury" (click)="scrollTo('galeria')">EXPLORAR SALAS</button>
+                <button class="btn btn-outline-luxury" (click)="scrollTo('promociones')">MEMBRESIA VIP</button>
+            </div>
+        </div>
+        <div class="hero-background"></div>
+    </section>
+
+    <!-- GALERÍA DE SALAS - PARALLAX -->
+    <section id="galeria" class="gallery-section">
+        <div class="container">
+            <div class="section-header reveal-on-scroll">
+                <h2>SALAS DE JUEGO PREMIUM</h2>
+                <p class="section-subtitle">Descubre nuestras exclusivas salas de juego</p>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="rooms-grid">
+                @for (room of gameRooms; track $index) {
+                <div class="room-card-wrapper reveal-on-scroll">
+                    <div class="room-card">
+                        <div class="room-image" [style.backgroundImage]="'url(' + room.image + ')'">
+                            <div class="room-pattern"></div>
+                            <div class="room-overlay"></div>
+                            <div class="room-content">
+                                <h3>{{room.title}}</h3>
+                                <p>{{room.description}}</p>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="room-badge">{{room.badge}}</span>
+                            <button class="btn-play">JUGAR AHORA</button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- PARALLAX DIVIDER -->
+    <section class="parallax-divider parallax-bg-1">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>LA EXPERIENCIA DEFINITIVA</h2>
+            <p>Donde el lujo se encuentra con la emoción</p>
+        </div>
+    </section>
+
+    <!-- JUEGOS DESTACADOS -->
+    <section id="juegos" class="games-section">
+        <div class="container">
+            <div class="section-header reveal-on-scroll">
+                <h2>COLECCIÓN DE JUEGOS</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="games-grid">
+                @for (game of gameCards; track $index) {
+                <div class="game-card-item reveal-on-scroll">
+                    <div class="game-card">
+                        <div class="game-image" [style.backgroundImage]="'url(' + game.image + ')'">
+                            <div class="game-badge">{{game.badge}}</div>
+                            <div class="game-overlay">
+                                <button class="btn-play-game">JUGAR</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <p class="game-category">{{game.category}}</p>
+                            <h4>{{game.title}}</h4>
+                            <div class="game-rating">
+                                @for (star of [1,2,3,4,5]; track star) {
+                                <i class="bi" [class.bi-star-fill]="star <= game.rating"
+                                    [class.bi-star]="star > game.rating" [class.active]="star <= game.rating"></i>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- PARALLAX DIVIDER 2 -->
+    <section class="parallax-divider parallax-bg-2">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>GANA EN GRANDE</h2>
+            <p>Promociones exclusivas para nuestros miembros</p>
+        </div>
+    </section>
+
+    <!-- PROMOCIONES -->
+    <section id="promociones" class="promo-section">
+        <div class="container">
+            <div class="promo-content reveal-on-scroll">
+                <div class="promo-text">
+                    <div class="vip-badge">STATUS ELITE</div>
+                    <h2 class="premium-title">BIENVENIDA <span class="gold-text">MAGISTRAL</span></h2>
+                    <p class="premium-description">Diseñado exclusivamente para conocedores del lujo. Eleva tu
+                        experiencia al nivel más alto de distinción en el mundo del gaming.</p>
+
+                    <div class="promo-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="bi bi-gem"></i></div>
+                            <div class="benefit-info">
+                                <h4>Paquete de Bienvenida</h4>
+                                <p>Bono del 100% hasta <span class="highlight">$10,000</span></p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="bi bi-stars"></i></div>
+                            <div class="benefit-info">
+                                <h4>Cortesías VIP</h4>
+                                <p>50 giros de cortesía en slots de alta gama</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="bi bi-shield-check"></i></div>
+                            <div class="benefit-info">
+                                <h4>Acceso Prioritario</h4>
+                                <p>Salas privadas y concierge dedicado 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-luxury-glow">RECLAMAR MEMBRESÍA</button>
+                </div>
+                <div class="promo-image">
+                    <div class="promo-visual-liquid">
+                        <div class="liquid-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper reveal-on-scroll">
+                <div class="contact-info">
+                    <h2>CONCIERGE VIP</h2>
+                    <p>Nuestro equipo de soporte de alta prioridad está disponible 24/7 para garantizar tu experiencia
+                        perfecta.</p>
+                    <div class="contact-details">
+                        <div class="detail-item">
+                            <span class="icon"><i class="bi bi-envelope"></i></span>
+                            <div>
+                                <p class="label">Email</p>
+                                <p class="value">exclusive&#64;neonroyale.com</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon"><i class="bi bi-telephone"></i></span>
+                            <div>
+                                <p class="label">Teléfono</p>
+                                <p class="value">+1 (800) ROYALE-1</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon"><i class="bi bi-clock"></i></span>
+                            <div>
+                                <p class="label">Disponibilidad</p>
+                                <p class="value">24/7 Disponible</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" class="form-input" [class.input-error]="contactErrors().name"
+                            [value]="contactData.name()" (input)="contactData.name.set($any($event.target).value)"
+                            placeholder="NOMBRE COMPLETO" required>
+                        @if (contactErrors().name) {
+                        <span class="error-msg">{{contactErrors().name}}</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-input" [class.input-error]="contactErrors().email"
+                            [value]="contactData.email()" (input)="contactData.email.set($any($event.target).value)"
+                            placeholder="CORREO ELECTRÓNICO" required>
+                        @if (contactErrors().email) {
+                        <span class="error-msg">{{contactErrors().email}}</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-input" rows="5" [class.input-error]="contactErrors().message"
+                            [value]="contactData.message()" (input)="contactData.message.set($any($event.target).value)"
+                            placeholder="TU MENSAJE" required></textarea>
+                        @if (contactErrors().message) {
+                        <span class="error-msg">{{contactErrors().message}}</span>
+                        }
+                    </div>
+                    <button type="button" class="btn btn-luxury w-100" (click)="enviarContacto()">ENVIAR
+                        MENSAJE</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- COMPONENTE USUARIOS (Login + Registro Futurista) -->
+<app-usuarios
+  [showLogin]="showLogin()"
+  [showRegister]="showRegister()"
+  (closeLogin)="onLoginClose()"
+  (closeRegister)="onRegisterClose()"
+  (switchToRegister)="onSwitchToRegister()"
+  (switchToLogin)="onSwitchToLogin()">
+</app-usuarios>
+
+<app-footer></app-footer>
