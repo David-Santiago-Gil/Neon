@@ -3,21 +3,30 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FooterComponent } from "./components/footer/footer";
 import { HeaderComponent } from "./components/header/header";
 import { UsuariosComponent } from "./components/usuarios/usuarios";
+import { AdminComponent } from "./components/admin/admin";
 import { ScrollService } from './services/scroll';
+import { JuegosService } from './services/juegos.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent],
+  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App implements AfterViewInit {
   protected readonly title = signal('neon-royale-casino');
   protected readonly scrollService = inject(ScrollService);
+  protected readonly juegosService = inject(JuegosService);
+  protected readonly authService = inject(AuthService);
   private readonly platformId = inject(PLATFORM_ID);
 
   showLogin = signal(false);
   showRegister = signal(false);
+
+  // Loading sim mode
+  gameLoading = signal<{active: boolean, title: string}>({active: false, title: ''});
+  isVip = signal(false);
 
   // Contact Form State
   contactData = {
@@ -85,68 +94,28 @@ export class App implements AfterViewInit {
     }
   ];
 
-  // Juegos destacados
-  gameCards = [
-    {
-      title: 'Neon Slots',
-      category: 'Slots',
-      badge: 'NUEVO',
-      rating: 5,
-      image: 'img/Slots.jpg'
-    },
-    {
-      title: 'Gold Roulette',
-      category: 'Mesa',
-      badge: 'HOT',
-      rating: 5,
-      image: 'img/gold.jpg'
-    },
-    {
-      title: 'Blackjack VIP',
-      category: 'Cartas',
-      badge: '',
-      rating: 5,
-      image: 'img/VIP.jpg'
-    },
-    {
-      title: 'Poker Master',
-      category: 'Cartas',
-      badge: 'HOT',
-      rating: 5,
-      image: 'img/Master.jpg'
-    },
-    {
-      title: 'Crash Royale',
-      category: 'Crash',
-      badge: 'NUEVO',
-      rating: 4,
-      image: 'img/clash.jpg'
-    },
-    {
-      title: 'Mega Wheel',
-      category: 'En Vivo',
-      badge: '',
-      rating: 5,
-      image: 'img/Wheel.jpg'
-    },
-    {
-      title: 'Golden Keno',
-      category: 'Lotería',
-      badge: '',
-      rating: 4,
-      image: 'img/Keno.jpg'
-    },
-    {
-      title: 'Baccarat Gold',
-      category: 'Mesa',
-      badge: 'NUEVO',
-      rating: 5,
-      image: 'img/Baccarat.jpg'
-    }
-  ];
+  // Juegos destacados - ahora consumen el JuegosService directamente en el HTML
+
 
   scrollTo(sectionId: string) {
     this.scrollService.scrollTo(sectionId);
+  }
+
+  jugarAhora(title: string) {
+    this.gameLoading.set({ active: true, title });
+    setTimeout(() => {
+      this.gameLoading.set({ active: false, title: '' });
+      alert(`🎮 Iniciando entorno inmersivo para: ${title}\n(¡Simulación completada!)`);
+    }, 2500);
+  }
+
+  reclamarVIP() {
+    if (this.authService.isAuthenticated()) {
+      this.isVip.set(true);
+      setTimeout(() => this.isVip.set(false), 4000);
+    } else {
+      this.showLogin.set(true);
+    }
   }
 
   enviarContacto() {

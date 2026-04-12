@@ -13,9 +13,18 @@
     </nav>
 
     <div class="auth-buttons d-flex gap-3">
-      <button class="btn btn-outline-light btn-sm px-3" (click)="openLogin.emit()">Login</button>
-      <button class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold"
-        (click)="openRegister.emit()">Register</button>
+      @if (!authService.isAuthenticated()) {
+        <button class="btn btn-outline-light btn-sm px-3" (click)="openLogin.emit()">Login</button>
+        <button class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold" (click)="openRegister.emit()">Register</button>
+      } @else {
+        <span class="text-light" style="font-size:0.8rem; margin:auto">¡Hola, <b style="color:#C9A84C">{{authService.currentUser()?.usuario}}</b>!</span>
+        
+        @if (authService.currentUser()?.rol === 'admin') {
+          <button class="btn btn-warning btn-sm px-3 text-dark fw-bold" (click)="scrollTo('panel-admin')"><i class="bi bi-shield-lock-fill"></i> Panel VIP</button>
+        }
+        
+        <button class="btn btn-outline-light btn-sm px-3" (click)="authService.logout()">Cerrar Sesión</button>
+      }
     </div>
   </div>
 </header>

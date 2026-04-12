@@ -12,6 +12,7 @@ export interface AuthResponse {
     nombre: string;
     email: string;
     usuario: string;
+    rol: string;
   };
 }
 

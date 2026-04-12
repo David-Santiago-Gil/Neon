@@ -54,10 +54,52 @@ async function initDatabase() {
         email VARCHAR(100) NOT NULL UNIQUE,
         usuario VARCHAR(50) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
+        rol VARCHAR(20) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
+    
+    // Crear tabla de juegos si no existe
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS juegos (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(100) NOT NULL,
+        category VARCHAR(50),
+        badge VARCHAR(20),
+        rating INT DEFAULT 5,
+        image VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Auto-crear usuario admin si no existe
+    const [adminCheck] = await pool.query('SELECT id FROM usuarios WHERE usuario = ?', ['admin']);
+    if (adminCheck.length === 0) {
+      const salt = await bcrypt.genSalt(10);
+      const tempPass = await bcrypt.hash('admin123', salt);
+      await pool.query(
+        'INSERT INTO usuarios (nombre, email, usuario, password, rol) VALUES (?, ?, ?, ?, ?)',
+        ['Administrador Master', 'admin@neonroyale.com', 'admin', tempPass, 'admin']
+      );
+      console.log('👑 Usuario Admin (admin:admin123) creado automáticamente.');
+    }
+
+    // Opcional: Insertar algunos juegos por defecto si la tabla está vacía
+    const [gamesCheck] = await pool.query('SELECT count(*) as count FROM juegos');
+    if (gamesCheck[0].count === 0) {
+      const defaultGames = [
+        ['Neon Slots', 'Slots', 'NUEVO', 5, 'img/Slots.jpg'],
+        ['Gold Roulette', 'Mesa', 'HOT', 5, 'img/gold.jpg'],
+        ['Blackjack VIP', 'Cartas', '', 5, 'img/VIP.jpg'],
+        ['Crash Royale', 'Crash', 'HOT', 4, 'img/clash.jpg']
+      ];
+      for (const g of defaultGames) {
+        await pool.query('INSERT INTO juegos (title, category, badge, rating, image) VALUES (?, ?, ?, ?, ?)', g);
+      }
+      console.log('🎮 Juegos por defecto insertados.');
+    }
+
     console.log('✅ Tabla "usuarios" verificada/creada');
   } catch (error) {
     console.error('❌ Error al conectar con MySQL:', error.message);
@@ -86,6 +128,15 @@ function authenticateToken(req, res, next) {
       return res.status(403).json({ message: 'Token inválido o expirado' });
     }
     req.user = user;
+    next();
+  });
+}
+
+function authenticateAdmin(req, res, next) {
+  authenticateToken(req, res, () => {
+    if (req.user.rol !== 'admin') {
+      return res.status(403).json({ message: 'Acceso denegado: solo administradores' });
+    }
     next();
   });
 }
@@ -136,7 +187,7 @@ app.post('/api/auth/register', async (req, res) => {
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: result.insertId, usuario, email },
+      { id: result.insertId, usuario, email, rol: 'user' },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -149,6 +200,7 @@ app.post('/api/auth/register', async (req, res) => {
         nombre,
         email,
         usuario,
+        rol: 'user'
       },
     });
   } catch (error) {
@@ -192,7 +244,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: user.id, usuario: user.usuario, email: user.email },
+      { id: user.id, usuario: user.usuario, email: user.email, rol: user.rol },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -205,6 +257,7 @@ app.post('/api/auth/login', async (req, res) => {
         nombre: user.nombre,
         email: user.email,
         usuario: user.usuario,
+        rol: user.rol
       },
     });
   } catch (error) {
@@ -217,7 +270,7 @@ app.post('/api/auth/login', async (req, res) => {
 app.get('/api/auth/profile', authenticateToken, async (req, res) => {
   try {
     const [users] = await pool.query(
-      'SELECT id, nombre, email, usuario, created_at FROM usuarios WHERE id = ?',
+      'SELECT id, nombre, email, usuario, rol, created_at FROM usuarios WHERE id = ?',
       [req.user.id]
     );
 
@@ -229,6 +282,52 @@ app.get('/api/auth/profile', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error al obtener perfil:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
+
+// ============================================
+// RUTAS DE JUEGOS (Y ADMIN)
+// ============================================
+
+// GET /api/juegos - Obtener todos los juegos (público)
+app.get('/api/juegos', async (req, res) => {
+  try {
+    const [juegos] = await pool.query('SELECT * FROM juegos ORDER BY created_at DESC');
+    res.json(juegos);
+  } catch (error) {
+    console.error('Error al obtener juegos:', error);
+    res.status(500).json({ message: 'Error al obtener juegos' });
+  }
+});
+
+// POST /api/juegos - Agregar juego (solo admin)
+app.post('/api/juegos', authenticateAdmin, async (req, res) => {
+  try {
+    const { title, category, badge, rating, image } = req.body;
+    if (!title || !category || !image) {
+      return res.status(400).json({ message: 'Título, categoría e imagen son obligatorios' });
+    }
+    
+    const [result] = await pool.query(
+      'INSERT INTO juegos (title, category, badge, rating, image) VALUES (?, ?, ?, ?, ?)',
+      [title, category, badge || '', rating || 5, image]
+    );
+    res.status(201).json({ message: 'Juego creado', id: result.insertId });
+  } catch (error) {
+    console.error('Error al crear juego:', error);
+    res.status(500).json({ message: 'Error interno' });
+  }
+});
+
+// DELETE /api/juegos/:id - Eliminar juego (solo admin)
+app.delete('/api/juegos/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM juegos WHERE id = ?', [id]);
+    res.json({ message: 'Juego borrado correctamente' });
+  } catch (error) {
+    console.error('Error al borrar juego:', error);
+    res.status(500).json({ message: 'Error interno' });
   }
 });
 

@@ -37,7 +37,7 @@
                         </div>
                         <div class="room-footer">
                             <span class="room-badge">{{room.badge}}</span>
-                            <button class="btn-play">JUGAR AHORA</button>
+                            <button class="btn-play" (click)="jugarAhora(room.title)">JUGAR AHORA</button>
                         </div>
                     </div>
                 </div>
@@ -64,13 +64,13 @@
             </div>
 
             <div class="games-grid">
-                @for (game of gameCards; track $index) {
+                @for (game of juegosService.juegos(); track $index) {
                 <div class="game-card-item reveal-on-scroll">
                     <div class="game-card">
                         <div class="game-image" [style.backgroundImage]="'url(' + game.image + ')'">
                             <div class="game-badge">{{game.badge}}</div>
                             <div class="game-overlay">
-                                <button class="btn-play-game">JUGAR</button>
+                                <button class="btn-play-game" (click)="jugarAhora(game.title)">JUGAR</button>
                             </div>
                         </div>
                         <div class="game-info">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-luxury-glow">RECLAMAR MEMBRESÍA</button>
+                    <button class="btn btn-luxury-glow" (click)="reclamarVIP()">RECLAMAR MEMBRESÍA</button>
                 </div>
                 <div class="promo-image">
                     <div class="promo-visual-liquid">
@@ -208,7 +208,37 @@
             </div>
         </div>
     </section>
+
+    <!-- ADMIN PANEL COMPONENT -->
+    @if (authService.isAuthenticated() && authService.currentUser()?.rol === 'admin') {
+      <section id="panel-admin" style="background:#0b0b0f; border-top:1px solid rgba(201,168,76,0.3)">
+        <app-admin></app-admin>
+      </section>
+    }
 </main>
+
+<!-- LOADING MODAL (SIMULADOR DE JUEGO) -->
+@if (gameLoading().active) {
+<div class="modal-overlay" style="z-index: 99999;">
+    <div class="modal-content" style="text-align:center; padding: 40px; border-color: rgba(201, 168, 76, 0.5)">
+        <div class="btn-loader" style="width: 50px; height: 50px; border-width:4px; border-top-color: #C9A84C; margin: 0 auto 20px;"></div>
+        <h2 style="color:#C9A84C; font-family:'Outfit'">INICIANDO ENTORNO</h2>
+        <p style="color:white; font-size:1.2rem; letter-spacing:2px">{{gameLoading().title}}</p>
+    </div>
+</div>
+}
+
+<!-- VIP SUCCESS ALERTA -->
+@if (isVip()) {
+<div class="modal-overlay" style="z-index: 99999; animation: overlayFadeIn 0.3s ease;">
+    <div class="modal-content" style="text-align:center; padding: 50px 30px; border-color: #E2C87A; box-shadow: 0 0 50px rgba(226, 200, 122, 0.3)">
+        <i class="bi bi-gem" style="font-size: 4rem; color: #E2C87A; display:block; margin-bottom:15px; animation: glowPulse 2s infinite"></i>
+        <h2 style="color:#E2C87A; font-family:'Outfit'; font-size:2rem; letter-spacing:4px">¡FELICIDADES!</h2>
+        <p style="color:white; font-size:1.1rem; margin-top:10px">Ahora eres Miembo VIP Exclusivo.</p>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:5px">Disfruta de tus beneficios élite.</p>
+    </div>
+</div>
+}
 
 <!-- COMPONENTE USUARIOS (Login + Registro Futurista) -->
 <app-usuarios

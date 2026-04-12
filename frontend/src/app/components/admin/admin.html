@@ -1,0 +1,88 @@
+<div class="admin-wrapper">
+  <div class="admin-header">
+    <h2><i class="bi bi-shield-lock-fill"></i> PANEL DE ADMINISTRACIÓN VIP</h2>
+    <p>Gestión del catálogo de juegos de Neon Royale</p>
+  </div>
+
+  <div class="admin-grid">
+    <!-- COLUMNA 1: FORMULARIO -->
+    <div class="admin-card form-section">
+      <h3>Añadir Nuevo Juego</h3>
+      
+      @if (serverError()) {
+        <div class="alert alert-error">{{serverError()}}</div>
+      }
+      @if (serverMessage()) {
+        <div class="alert alert-success">{{serverMessage()}}</div>
+      }
+
+      <form (submit)="agregarJuego(); $event.preventDefault()">
+        <div class="form-group">
+          <label>Título del Juego *</label>
+          <input type="text" [(ngModel)]="newJuego.title" name="title" placeholder="Ej: Neon Slots 2.0" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Categoría *</label>
+            <select [(ngModel)]="newJuego.category" name="category" required>
+              <option value="">Seleccionar...</option>
+              <option value="Slots">Slots</option>
+              <option value="Mesa">Juego de Mesa</option>
+              <option value="Cartas">Cartas</option>
+              <option value="En Vivo">En Vivo</option>
+              <option value="Crash">Crash</option>
+              <option value="Lotería">Lotería / Keno</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Insignia / Etiqueta</label>
+            <input type="text" [(ngModel)]="newJuego.badge" name="badge" placeholder="Ej: NUEVO, HOT, VIP">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Imagen *</label>
+            <input type="text" [(ngModel)]="newJuego.image" name="image" placeholder="Ruta: img/ejemplo.jpg" required>
+          </div>
+          <div class="form-group">
+            <label>Rating (1-5)</label>
+            <input type="number" [(ngModel)]="newJuego.rating" name="rating" min="1" max="5">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            PROCESANDO...
+          } @else {
+            GUARDAR JUEGO EN SISTEMA
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- COLUMNA 2: LISTA DE JUEGOS ACTUALES -->
+    <div class="admin-card list-section">
+      <h3>Catálogo Actual</h3>
+      
+      <div class="games-list">
+        @for (juego of juegosService.juegos(); track juego.id) {
+          <div class="game-item">
+            <img [src]="juego.image" [alt]="juego.title" class="game-thumbnail" onerror="this.src='img/gold.jpg'">
+            <div class="game-info">
+              <h4>{{ juego.title }}</h4>
+              <span>{{ juego.category }}</span>
+            </div>
+            <button class="btn-delete" (click)="borrarJuego(juego.id)" title="Eliminar juego">
+              <i class="bi bi-trash"></i> Borrar
+            </button>
+          </div>
+        } @empty {
+          <div class="empty-state">No hay juegos en el sistema.</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
