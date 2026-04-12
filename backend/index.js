@@ -57,11 +57,20 @@ async function initDatabase() {
         email VARCHAR(100) NOT NULL UNIQUE,
         usuario VARCHAR(50) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        rol VARCHAR(20) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
+
+    // Asegurar que la columna 'rol' exista para bases de datos antiguas
+    try {
+      await pool.query("ALTER TABLE usuarios ADD COLUMN rol VARCHAR(20) DEFAULT 'user'");
+      console.log('✅ Columna "rol" agregada a usuarios.');
+    } catch (e) {
+      if (e.code !== 'ER_DUP_FIELDNAME') {
+        throw e;
+      }
+    }
     
     // Crear tabla de juegos si no existe
     await pool.query(`
