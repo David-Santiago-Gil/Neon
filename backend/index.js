@@ -17,7 +17,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+    origin: function (origin, callback) {
+      // Permitir todos los orígenes
+      callback(null, true);
+    },
     credentials: true,
   })
 );
