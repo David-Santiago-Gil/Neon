@@ -1,0 +1,113 @@
+.engine-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 4, 8, 0.95);
+  backdrop-filter: blur(15px);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.engine-container {
+  width: 95%;
+  max-width: 900px;
+  height: 90vh;
+  max-height: 800px;
+  background: linear-gradient(135deg, #101015 0%, #08080a 100%);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 0 50px rgba(201, 168, 76, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
+  overflow-y: auto;
+}
+
+.shadow-neon {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 168, 76, 0.2);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* SLOTS */
+.reel-box {
+  width: 120px;
+  height: 140px;
+  background: linear-gradient(180deg, #1f1f25 0%, #101015 100%);
+  border: 4px solid #333;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+  box-shadow: inset 0px 5px 15px rgba(0,0,0,0.8);
+}
+
+.spinning {
+  animation: blurVibrate 0.15s infinite;
+  color: transparent;
+  text-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
+
+@keyframes blurVibrate {
+  0% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); filter: blur(2px); }
+  100% { transform: translateY(-5px); }
+}
+
+/* CRASH */
+.crash-graph {
+  font-family: 'Outfit', sans-serif;
+  text-shadow: 0 0 20px rgba(255,255,255,0.2);
+  transition: all 0.1s linear;
+}
+
+.pulse {
+  animation: pulser 0.5s infinite;
+}
+
+@keyframes pulser {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
+  100% { transform: scale(1); }
+}
+
+.animate-drop {
+  animation: dropIn 0.4s ease-out forwards;
+}
+
+@keyframes dropIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* CARDS */
+.dealer-zone, .player-zone {
+  transition: all 0.3s;
+}
+
+.player-zone {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

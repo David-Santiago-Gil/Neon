@@ -5,13 +5,14 @@ import { HeaderComponent } from "./components/header/header";
 import { UsuariosComponent } from "./components/usuarios/usuarios";
 import { AdminComponent } from "./components/admin/admin";
 import { SoporteComponent } from "./components/soporte/soporte";
+import { GameEngineComponent } from "./components/game-engine/game-engine";
 import { ScrollService } from './services/scroll';
 import { JuegosService } from './services/juegos.service';
 import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent, SoporteComponent],
+  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent, SoporteComponent, GameEngineComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
@@ -26,8 +27,7 @@ export class App implements AfterViewInit {
   showRegister = signal(false);
   showSoporte = signal(false);
 
-  // Loading sim mode
-  gameLoading = signal<{active: boolean, title: string}>({active: false, title: ''});
+  // Game Engine State
   isVip = signal(false);
 
   // Contact Form State
@@ -99,16 +99,28 @@ export class App implements AfterViewInit {
   // Juegos destacados - ahora consumen el JuegosService directamente en el HTML
 
 
+  selectedGame = signal<{title: string, category: string} | null>(null);
+
   scrollTo(sectionId: string) {
     this.scrollService.scrollTo(sectionId);
   }
 
-  jugarAhora(title: string) {
-    this.gameLoading.set({ active: true, title });
-    setTimeout(() => {
-      this.gameLoading.set({ active: false, title: '' });
-      alert(`🎮 Iniciando entorno inmersivo para: ${title}\n(¡Simulación completada!)`);
-    }, 2500);
+  jugarAhora(title: string, category: string = '') {
+    if (!this.authService.isAuthenticated()) {
+        this.showLogin.set(true);
+        return;
+    }
+    
+    // Inferir categoría si no existe explícitamente (ej: desde las Salas en vivo genéricas)
+    if (!category) {
+      const lower = title.toLowerCase();
+      if (lower.includes('ruleta')) category = 'Ruleta';
+      else if (lower.includes('baccarat') || lower.includes('poker') || lower.includes('blackjack')) category = 'Cartas';
+      else if (lower.includes('slots') || lower.includes('neon')) category = 'Slots';
+      else category = 'General';
+    }
+
+    this.selectedGame.set({ title, category });
   }
 
   reclamarVIP() {
