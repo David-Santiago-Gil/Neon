@@ -4,13 +4,14 @@ import { FooterComponent } from "./components/footer/footer";
 import { HeaderComponent } from "./components/header/header";
 import { UsuariosComponent } from "./components/usuarios/usuarios";
 import { AdminComponent } from "./components/admin/admin";
+import { SoporteComponent } from "./components/soporte/soporte";
 import { ScrollService } from './services/scroll';
 import { JuegosService } from './services/juegos.service';
 import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent],
+  imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent, SoporteComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
@@ -23,6 +24,7 @@ export class App implements AfterViewInit {
 
   showLogin = signal(false);
   showRegister = signal(false);
+  showSoporte = signal(false);
 
   // Loading sim mode
   gameLoading = signal<{active: boolean, title: string}>({active: false, title: ''});

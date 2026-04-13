@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -9,18 +9,16 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
   
-  simularCarga(juego: string, event: Event) {
+  scrollToNav = output<string>();
+  abrirSoporte = output<void>();
+
+  scrollAction(seccion: string, event: Event) {
     event.preventDefault();
-    alert(`🎮 Cargando recurso inmersivo: ${juego}`);
+    this.scrollToNav.emit(seccion);
   }
 
-  mostrarPromocion(promo: string, event: Event) {
+  showApoyo(event: Event) {
     event.preventDefault();
-    alert(`💎 Has descubierto la promoción oculta: ${promo}! Entrando a la zona Elite...`);
-  }
-
-  redireccionDummy(sitio: string, event: Event) {
-    event.preventDefault();
-    alert(`🔌 Conectando a los servidores de ${sitio}... (Sistemas activos)`);
+    this.abrirSoporte.emit();
   }
 }

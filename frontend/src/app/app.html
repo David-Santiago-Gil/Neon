@@ -250,4 +250,9 @@
   (switchToLogin)="onSwitchToLogin()">
 </app-usuarios>
 
-<app-footer></app-footer>
+<!-- CENTRO DE SOPORTE -->
+@if (showSoporte()) {
+  <app-soporte (closeSoporte)="showSoporte.set(false)"></app-soporte>
+}
+
+<app-footer (scrollToNav)="scrollTo($event)" (abrirSoporte)="showSoporte.set(true)"></app-footer>

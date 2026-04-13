@@ -4,41 +4,41 @@
       <div class="col-6 col-lg-3">
         <h5 class="text-info text-uppercase mb-4 fw-bold small">Juegos</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a href="#" (click)="simularCarga('Tragamonedas Neon', $event)" class="text-secondary text-decoration-none small">Tragamonedas Neon</a></li>
-          <li class="mb-2"><a href="#" (click)="simularCarga('Ruleta Royale', $event)" class="text-secondary text-decoration-none small">Ruleta Royale</a></li>
-          <li class="mb-2"><a href="#" (click)="simularCarga('Blackjack VIP', $event)" class="text-secondary text-decoration-none small">Blackjack VIP</a></li>
-          <li class="mb-2"><a href="#" (click)="simularCarga('Póker Texas', $event)" class="text-secondary text-decoration-none small">Póker Texas</a></li>
-          <li class="mb-2"><a href="#" (click)="simularCarga('Crash Royale', $event)" class="text-secondary text-decoration-none small">Crash Royale</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('juegos', $event)" class="text-secondary text-decoration-none small">Tragamonedas Neon</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('juegos', $event)" class="text-secondary text-decoration-none small">Ruleta Royale</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('juegos', $event)" class="text-secondary text-decoration-none small">Blackjack VIP</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('juegos', $event)" class="text-secondary text-decoration-none small">Póker Texas</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('juegos', $event)" class="text-secondary text-decoration-none small">Crash Royale</a></li>
         </ul>
       </div>
 
       <div class="col-6 col-lg-3">
         <h5 class="text-info text-uppercase mb-4 fw-bold small">Promociones</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a href="#" (click)="mostrarPromocion('Bonos Bienvenida', $event)" class="text-secondary text-decoration-none small">Bonos Bienvenida</a></li>
-          <li class="mb-2"><a href="#" (click)="mostrarPromocion('Free Spins Diarios', $event)" class="text-secondary text-decoration-none small">Free Spins Diarios</a></li>
-          <li class="mb-2"><a href="#" (click)="mostrarPromocion('Torneos Exclusivos', $event)" class="text-secondary text-decoration-none small">Torneos</a></li>
-          <li class="mb-2"><a href="#" (click)="mostrarPromocion('Membresía VIP', $event)" class="text-secondary text-decoration-none small">VIP</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('promociones', $event)" class="text-secondary text-decoration-none small">Bonos Bienvenida</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('promociones', $event)" class="text-secondary text-decoration-none small">Free Spins Diarios</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('promociones', $event)" class="text-secondary text-decoration-none small">Torneos</a></li>
+          <li class="mb-2"><a href="#" (click)="scrollAction('promociones', $event)" class="text-secondary text-decoration-none small">VIP</a></li>
         </ul>
       </div>
 
       <div class="col-6 col-lg-3">
         <h5 class="text-info text-uppercase mb-4 fw-bold small">Soporte</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a href="#" (click)="redireccionDummy('Soporte 24/7', $event)" class="text-secondary text-decoration-none small">Chat 24/7</a></li>
-          <li class="mb-2"><a href="#" (click)="redireccionDummy('Centro de Ayuda', $event)" class="text-secondary text-decoration-none small">Centro Ayuda</a></li>
-          <li class="mb-2"><a href="#" (click)="redireccionDummy('Bóveda de Seguridad', $event)" class="text-secondary text-decoration-none small">Seguridad</a></li>
-          <li class="mb-2"><a href="#" (click)="redireccionDummy('Términos y Condiciones', $event)" class="text-secondary text-decoration-none small">Términos</a></li>
+          <li class="mb-2"><a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none small">Chat 24/7</a></li>
+          <li class="mb-2"><a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none small">Centro Ayuda</a></li>
+          <li class="mb-2"><a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none small">Seguridad</a></li>
+          <li class="mb-2"><a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none small">Términos</a></li>
         </ul>
       </div>
 
       <div class="col-6 col-lg-3">
         <h5 class="text-info text-uppercase mb-4 fw-bold small">Comunidad</h5>
         <div class="social-links d-flex flex-wrap gap-3">
-          <a href="#" (click)="redireccionDummy('Discord', $event)" class="text-secondary" aria-label="Discord"><i class="bi bi-discord"></i></a>
-          <a href="#" (click)="redireccionDummy('Instagram', $event)" class="text-secondary" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" (click)="redireccionDummy('Facebook', $event)" class="text-secondary" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" (click)="redireccionDummy('Twitter/X', $event)" class="text-secondary" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="https://discord.com" target="_blank" class="text-secondary" aria-label="Discord"><i class="bi bi-discord"></i></a>
+          <a href="https://instagram.com" target="_blank" class="text-secondary" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="https://facebook.com" target="_blank" class="text-secondary" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="https://x.com" target="_blank" class="text-secondary" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
         </div>
       </div>
     </div>
@@ -56,9 +56,9 @@
       </div>
 
       <div class="legal-links d-flex flex-wrap gap-2 small">
-        <a href="#" (click)="redireccionDummy('Aviso de Privacidad', $event)" class="text-secondary text-decoration-none">Privacidad</a> |
-        <a href="#" (click)="redireccionDummy('Avisos Legales', $event)" class="text-secondary text-decoration-none">Aviso legal</a> |
-        <a href="#" (click)="redireccionDummy('Registro de Marcas', $event)" class="text-secondary text-decoration-none">Marcas</a>
+        <a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none">Privacidad</a> |
+        <a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none">Aviso legal</a> |
+        <a href="#" (click)="showApoyo($event)" class="text-secondary text-decoration-none">Marcas</a>
       </div>
     </div>
   </div>

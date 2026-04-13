@@ -1,0 +1,55 @@
+<div class="soporte-overlay" (click)="closeSoporte.emit()">
+  <!-- PREVENIR CLICK OUTSIDE -->
+  <div class="soporte-content glass-strong" (click)="$event.stopPropagation()">
+    <button class="btn-close-modal" (click)="closeSoporte.emit()"><i class="bi bi-x-lg"></i></button>
+    
+    <div class="soporte-header">
+      <i class="bi bi-headset icon-neon"></i>
+      <h2>CENTRO DE SOPORTE Y LEGAL</h2>
+      <p>Resolución rápida para usuarios selectos</p>
+    </div>
+
+    <div class="soporte-tabs">
+      <button [class.active]="activeTab() === 'faq'" (click)="toggleTabs('faq')">PREGUNTAS FRECUENTES</button>
+      <button [class.active]="activeTab() === 'terms'" (click)="toggleTabs('terms')">TÉRMINOS Y CONDICIONES</button>
+    </div>
+
+    <div class="soporte-body scroll-elegante">
+      <!-- PANEL DE PREGUNTAS -->
+      @if (activeTab() === 'faq') {
+        <div class="faq-container">
+          @for (faq of faqs(); track $index) {
+            <div class="faq-item" [class.open]="faq.abierta" (click)="toggleFaq($index)">
+              <div class="faq-pregunta">
+                <span>{{faq.pregunta}}</span>
+                <i class="bi" [class.bi-chevron-down]="!faq.abierta" [class.bi-chevron-up]="faq.abierta"></i>
+              </div>
+              @if (faq.abierta) {
+                <div class="faq-respuesta">
+                  {{faq.respuesta}}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- PANEL DE TÉRMINOS LEGALES -->
+      @if (activeTab() === 'terms') {
+        <div class="terms-container">
+          <h4>1. ACUERDO DE LICENCIA Y SERVICIO</h4>
+          <p>Al acceder, registrarse y utilizar el sistema proporcionado por Neon Royale Casino (en adelante "El Operador"), el usuario acepta inequívocamente los presentes términos. Las cuentas sólo se otorgarán a usuarios que cumplan la normativa internacional de mayoría de edad legal (18+).</p>
+
+          <h4>2. REQUISITOS DEL CLUB VIP EXCLUSIVO</h4>
+          <p>La categoría de miembro VIP está ligada a un escrutinio interno del Operador y depende expresamente del volumen constante y responsable del jugador. El sistema es transparente, pero los beneficios como Cashback se ajustan acorde al perfil autorizado.</p>
+
+          <h4>3. CONFIDENCIALIDAD DE DATOS (GDPR ACCORDANCE)</h4>
+          <p>Toda la información bancaria y criptográfica viaja en túneles P2P seguros (256-bit RSA). Somos auditoriamente comprobables y libres de compartir metadatos a terceras instancias publicitarias. Sus transferencias nunca sufrirán interrupciones.</p>
+          
+          <h4>4. RESOLUCIÓN DE DISPUTAS Y ANTIFRAUDE</h4>
+          <p>El uso de Inteligencia Artificial de terceros para manipular resultados resultará en un bloqueo total y la expropiación del monedero. Todas las simulaciones han sido matemáticamente calibradas bajo la técnica de FairPlay Probatorio.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>
