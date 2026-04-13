@@ -14,7 +14,14 @@ import { AuthService } from './services/auth.service';
   selector: 'app-root',
   imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent, SoporteComponent, GameEngineComponent],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: [
+    './css/base.css',
+    './css/hero.css',
+    './css/sections.css',
+    './css/promo.css',
+    './css/contact.css',
+    './css/ui.css'
+  ]
 })
 export class App implements AfterViewInit {
   protected readonly title = signal('neon-royale-casino');
@@ -102,6 +109,10 @@ export class App implements AfterViewInit {
   selectedGame = signal<{title: string, category: string} | null>(null);
 
   scrollTo(sectionId: string) {
+    // Limpiar formulario de contacto al navegar a otra sección
+    if (sectionId !== 'contacto') {
+      this.resetContactForm();
+    }
     this.scrollService.scrollTo(sectionId);
   }
 
@@ -156,6 +167,13 @@ export class App implements AfterViewInit {
       this.contactData.message.set('');
       alert('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.');
     }
+  }
+
+  resetContactForm() {
+    this.contactData.name.set('');
+    this.contactData.email.set('');
+    this.contactData.message.set('');
+    this.contactErrors.set({});
   }
 
   onLoginClose() {

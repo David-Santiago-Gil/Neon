@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/styles.css"],
+  "sourcesContent": ["/* Global Styles */\nhtml,\nbody {\n  background-color: #0b0b0f !important;\n  color: #f0f0f0;\n  margin: 0;\n  padding: 0;\n  overflow-x: hidden;\n  min-height: 100%;\n}\n\n:root {\n  --bg-pure: #0b0b0f;\n  --gold-luxury: #C9A84C;\n  --header-height: 80px;\n}\n\n.parallax-bg-1 {\n  background-image: url('https://david-santiago-gil.github.io/casino/img/3.jpg');\n}\n\n.parallax-bg-2 {\n  background-image: url('https://david-santiago-gil.github.io/casino/img/1.jpg');\n}"],
+  "mappings": ";AACA;AACA;AACE,oBAAkB;AAClB,SAAO;AACP,UAAQ;AACR,WAAS;AACT,cAAY;AACZ,cAAY;AACd;AAEA;AACE,aAAW;AACX,iBAAe;AACf,mBAAiB;AACnB;AAEA,CAAC;AACC,oBAAkB;AACpB;AAEA,CAAC;AACC,oBAAkB;AACpB;",
+  "names": []
+}

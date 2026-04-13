@@ -1,2 +1,0 @@
-export default `html,body{background-color:#0b0b0f!important;color:#f0f0f0;margin:0;padding:0;overflow-x:hidden;min-height:100%}:root{--bg-pure: #0b0b0f;--gold-luxury: #C9A84C;--header-height: 80px}.parallax-bg-1{background-image:url(https://david-santiago-gil.github.io/casino/img/3.jpg)}.parallax-bg-2{background-image:url(https://david-santiago-gil.github.io/casino/img/1.jpg)}
-`;
