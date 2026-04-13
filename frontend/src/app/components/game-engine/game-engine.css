@@ -1,16 +1,19 @@
+/* UNIFIED GAME ENGINE STYLES - OPTIMIZED */
+
 .engine-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(4, 4, 8, 0.95);
-  backdrop-filter: blur(15px);
+  background: rgba(4, 4, 8, 0.92);
+  backdrop-filter: blur(8px); /* Reducido de 15px para rendimiento */
   z-index: 100000;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Inter', sans-serif;
+  will-change: opacity;
 }
 
 .engine-container {
@@ -18,96 +21,140 @@
   max-width: 900px;
   height: 90vh;
   max-height: 800px;
-  background: linear-gradient(135deg, #101015 0%, #08080a 100%);
-  border: 1px solid rgba(201, 168, 76, 0.3);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  box-shadow: 0 0 50px rgba(201, 168, 76, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
+  position: relative;
   overflow-y: auto;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, background;
 }
 
 .shadow-neon {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 168, 76, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 15px;
-  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* SLOTS */
+/* ========================================= */
+/* THEME: SLOTS (LAS VEGAS LUXURY)           */
+/* ========================================= */
+.theme-slots {
+  background: linear-gradient(135deg, #1a0b2e 0%, #0b0b0f 100%);
+  border: 2px solid #C9A84C;
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.3), inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.theme-slots .engine-header { border-bottom: 2px solid rgba(201,168,76, 0.4); }
+.theme-slots .reel-box {
+  background: linear-gradient(180deg, #3d2a5a 0%, #150a25 100%);
+  border: 4px solid #C9A84C;
+  color: #FFD700;
+  text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 30px rgba(255,215,0,0.4);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(201,168,76, 0.2);
+}
+
+/* ========================================= */
+/* THEME: CRASH (CYBERPUNK RADAR)            */
+/* ========================================= */
+.theme-crash {
+  background: #020204;
+  border: 2px solid #00d4ff;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 70%),
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.2), inset 0 0 50px rgba(0,0,0,1);
+}
+
+.theme-crash .crash-graph {
+  font-family: 'Courier New', Courier, monospace;
+  color: #00ffcc;
+  text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
+  font-size: 6rem;
+  letter-spacing: -4px;
+}
+
+.theme-crash .badge { 
+  background: #00d4ff; 
+  color: #000; 
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* ========================================= */
+/* THEME: CARTAS / GENERAL (ROYAL CASINO)    */
+/* ========================================= */
+.theme-cartas, .theme-poker, .theme-blackjack, .theme-mesa, .theme-general {
+  background: radial-gradient(circle at center, #0e3d2a 0%, #05140e 100%);
+  border: 3px solid #b38b2e;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.7), 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.theme-cartas .player-zone, .theme-poker .player-zone, .theme-blackjack .player-zone {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid #C9A84C;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(201,168,76, 0.15);
+  position: relative;
+}
+
+.theme-cartas .player-zone::after {
+  content: "ESPERANDO CARTAS...";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  color: #C9A84C;
+  letter-spacing: 2px;
+}
+
+/* COMPONENTES INTERNOS */
 .reel-box {
   width: 120px;
   height: 140px;
-  background: linear-gradient(180deg, #1f1f25 0%, #101015 100%);
-  border: 4px solid #333;
-  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 5rem;
-  box-shadow: inset 0px 5px 15px rgba(0,0,0,0.8);
+  border-radius: 10px;
+  will-change: transform;
 }
 
 .spinning {
-  animation: blurVibrate 0.15s infinite;
-  color: transparent;
-  text-shadow: 0 0 15px rgba(255,255,255,0.8);
+  animation: blurVibrate 0.1s infinite;
+  filter: blur(2px);
 }
 
 @keyframes blurVibrate {
-  0% { transform: translateY(-5px); }
-  50% { transform: translateY(5px); filter: blur(2px); }
-  100% { transform: translateY(-5px); }
+  0% { transform: translateY(-3px); }
+  50% { transform: translateY(3px); }
+  100% { transform: translateY(-3px); }
 }
 
-/* CRASH */
-.crash-graph {
-  font-family: 'Outfit', sans-serif;
-  text-shadow: 0 0 20px rgba(255,255,255,0.2);
-  transition: all 0.1s linear;
-}
-
-.pulse {
-  animation: pulser 0.5s infinite;
-}
+.pulse { animation: pulser 0.8s infinite; will-change: transform, box-shadow; }
 
 @keyframes pulser {
   0% { transform: scale(1); }
-  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
+  50% { transform: scale(1.03); box-shadow: 0 0 15px rgba(40, 167, 69, 0.4); }
   100% { transform: scale(1); }
 }
 
-.animate-drop {
-  animation: dropIn 0.4s ease-out forwards;
-}
-
+.animate-drop { animation: dropIn 0.3s ease-out forwards; }
 @keyframes dropIn {
   0% { opacity: 0; transform: translateY(-10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-.fade-in {
-  animation: fadeIn 0.3s forwards;
-}
+.fade-in { animation: fadeIn 0.3s forwards; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* CARDS */
-.dealer-zone, .player-zone {
-  transition: all 0.3s;
-}
-
-.player-zone {
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+.scroll-elegante::-webkit-scrollbar { width: 6px; }
+.scroll-elegante::-webkit-scrollbar-track { background: transparent; }
+.scroll-elegante::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }

@@ -64,27 +64,36 @@
             </div>
 
             <div class="games-grid">
-                @for (game of juegosService.juegos(); track $index) {
-                <div class="game-card-item reveal-on-scroll">
-                    <div class="game-card">
-                        <div class="game-image" [style.backgroundImage]="'url(' + game.image + ')'">
-                            <div class="game-badge">{{game.badge}}</div>
-                            <div class="game-overlay">
-                                <button class="btn-play-game" (click)="jugarAhora(game.title, game.category)">JUGAR</button>
+                @if (juegosService.juegos().length === 0) {
+                    <!-- SKELETON LOADING STATE -->
+                    @for (i of [1,2,3,4,5,6,7,8]; track $index) {
+                      <div class="game-card skeleton-card">
+                        <div class="skeleton-img"></div>
+                        <div class="skeleton-content"></div>
+                      </div>
+                    }
+                } @else {
+                    @for (game of juegosService.juegos(); track $index) {
+                    <div class="game-card-item reveal-on-scroll">
+                        <div class="game-card">
+                            <div class="game-image" [style.backgroundImage]="'url(' + game.image + ')'">
+                                <div class="game-badge">{{game.badge}}</div>
+                                <div class="game-overlay">
+                                    <button class="btn-play-game" (click)="jugarAhora(game.title, game.category)">JUGAR</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="game-info">
-                            <p class="game-category">{{game.category}}</p>
-                            <h4>{{game.title}}</h4>
-                            <div class="game-rating">
-                                @for (star of [1,2,3,4,5]; track star) {
-                                <i class="bi" [class.bi-star-fill]="star <= game.rating"
-                                    [class.bi-star]="star > game.rating" [class.active]="star <= game.rating"></i>
-                                }
+                            <div class="game-info">
+                                <span class="game-category">{{game.category}}</span>
+                                <h4>{{game.title}}</h4>
+                                <div class="game-rating">
+                                    @for (star of [1,2,3,4,5]; track $index) {
+                                      <i class="bi bi-star-fill" [class.active]="$index < game.rating"></i>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    }
                 }
             </div>
         </div>

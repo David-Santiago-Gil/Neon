@@ -15,6 +15,6 @@ export default `<!doctype html>
 
 <body ngcm="">
   <app-root></app-root>
-<script src="main-ZNE55N2D.js" type="module"></script></body>
+<script src="main-GTCPSIS6.js" type="module"></script></body>
 
 </html>`;
