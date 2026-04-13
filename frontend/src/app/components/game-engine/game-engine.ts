@@ -12,6 +12,7 @@ interface Card {
   value: string;
   suit: string;
   points: number;
+  hidden?: boolean;
 }
 
 @Component({
@@ -22,6 +23,7 @@ interface Card {
   styleUrl: './game-engine.css'
 })
 export class GameEngineComponent implements OnDestroy {
+  readonly ROULETTE_NUMS = ROULETTE_NUMBERS;
   gameData = input<{title: string, category: string}>();
   exitGame = output<void>();
 
@@ -29,6 +31,7 @@ export class GameEngineComponent implements OnDestroy {
   betAmount = signal<number>(10);
   lastMessage = signal<string>('Bienvenido. Haz tu apuesta.');
   lastWin = signal<number>(0);
+  selectedNumber = signal<number>(18); // Default selected number
 
   // ===================== LÓGICA DE SLOTS =====================
   reels = signal<string[][]>([['❓'], ['❓'], ['❓']]);
@@ -126,7 +129,7 @@ export class GameEngineComponent implements OnDestroy {
     this.balance.update(b => b - this.betAmount());
     this.rouletteActive.set(true);
     this.lastWin.set(0);
-    this.setMsg('¡No va más! Girando la ruleta...');
+    this.setMsg(`¡No va más! Apostaste al ${this.selectedNumber()}. Girando...`);
 
     const randomIndex = Math.floor(Math.random() * ROULETTE_NUMBERS.length);
     const winner = ROULETTE_NUMBERS[randomIndex];
@@ -144,19 +147,36 @@ export class GameEngineComponent implements OnDestroy {
     this.rouletteActive.set(false);
     this.winningNumber.set(winner);
 
-    if (winner === 0) {
-       let prize = this.betAmount() * 35;
-       this.balance.update(b => b + prize);
-       this.lastWin.set(prize);
-       this.setMsg(`¡EL CERRRRRRO! Premio Mayor: $${prize}`);
-    } else if (randomIndex % 2 !== 0) { // En nuestro array los impares son rojos (simplificado)
-       let prize = this.betAmount() * 2;
-       this.balance.update(b => b + prize);
-       this.lastWin.set(prize);
-       this.setMsg(`¡ROJO gana! Salió el ${winner}. Ganaste $${prize}`);
+    this.calculateRouletteWin(winner);
+  }
+
+  calculateRouletteWin(winner: number) {
+    const target = this.selectedNumber();
+    const diff = Math.abs(winner - target);
+
+    if (winner === target) {
+      const prize = this.betAmount() * 3;
+      this.finishRouletteWin(prize, `¡NÚMERO EXACTO! Salió el ${winner}. Ganaste $${prize} (3x)`);
+    } else if (diff === 1) {
+      const prize = this.betAmount() * 2;
+      this.finishRouletteWin(prize, `¡CERCA! Salió el ${winner}. Rango +/-1: Ganaste $${prize} (2x)`);
+    } else if (diff === 2) {
+      const prize = this.betAmount() * 1;
+      this.finishRouletteWin(prize, `¡POR POCO! Salió el ${winner}. Rango +/-2: Recuperas apuesta $${prize} (1x)`);
     } else {
-       this.setMsg(`Salió el ${winner} (Negro). Gana la casa.`);
+      this.setMsg(`Salió el ${winner}. La casa gana esta vez.`);
     }
+  }
+
+  private finishRouletteWin(prize: number, msg: string) {
+    this.balance.update(b => b + prize);
+    this.lastWin.set(prize);
+    this.setMsg(msg);
+  }
+
+  setRouletteNumber(num: number) {
+    if (this.rouletteActive()) return;
+    this.selectedNumber.set(num);
   }
 
   // ===================== LÓGICA DE CARTAS =====================
@@ -164,6 +184,7 @@ export class GameEngineComponent implements OnDestroy {
   dealerHand = signal<Card[]>([]);
   cardsActive = signal<boolean>(false);
   gameOver = signal<boolean>(false);
+  dealerRevealed = signal<boolean>(false);
 
   createCard(): Card {
     const v = VALUES[Math.floor(Math.random() * VALUES.length)];
@@ -193,9 +214,12 @@ export class GameEngineComponent implements OnDestroy {
     this.dealerHand.set([]);
 
     this.setMsg('Repartiendo cartas...');
+    this.dealerRevealed.set(false);
+    
     await this.addCard('player');
-    await this.addCard('dealer');
+    await this.addCard('dealer'); // First dealer card face up
     await this.addCard('player');
+    await this.addCard('dealer', true); // Second dealer card hidden
 
     const pTotal = this.getHandTotal(this.playerHand());
     if (pTotal === 21) {
@@ -205,9 +229,10 @@ export class GameEngineComponent implements OnDestroy {
     }
   }
 
-  async addCard(who: 'player' | 'dealer') {
+  async addCard(who: 'player' | 'dealer', hidden = false) {
     await this.delay(400); 
     const card = this.createCard();
+    card.hidden = hidden;
     if (who === 'player') this.playerHand.update(h => [...h, card]);
     else this.dealerHand.update(h => [...h, card]);
   }
@@ -223,7 +248,9 @@ export class GameEngineComponent implements OnDestroy {
 
   async standCard() {
     if (!this.cardsActive() || this.gameOver()) return;
-    this.setMsg('Crupier jugando...');
+    this.setMsg('Crupier revelando carta...');
+    this.dealerRevealed.set(true);
+    await this.delay(1000); // Wait for flip animation
     
     let dTotal = this.getHandTotal(this.dealerHand());
     while (dTotal < 17) {
@@ -236,6 +263,7 @@ export class GameEngineComponent implements OnDestroy {
   resolveCards() {
     this.cardsActive.set(false);
     this.gameOver.set(true);
+    this.dealerRevealed.set(true); // Ensure dealer reveals everything at end
     const p = this.getHandTotal(this.playerHand());
     const d = this.getHandTotal(this.dealerHand());
 

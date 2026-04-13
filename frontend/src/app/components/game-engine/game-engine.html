@@ -1,9 +1,9 @@
-<div class="engine-overlay fade-in">
-  <div class="engine-container shadow-neon" [class]="'theme-' + (gameData()?.category || 'general').toLowerCase().split(' ')[0]">
+<div class="engine-overlay fade-in p-0 p-md-3">
+  <div class="engine-container shadow-neon mx-auto" [class]="'theme-' + (gameData()?.category || 'general').toLowerCase().split(' ')[0]">
     
     <!-- HEADER -->
-    <div class="engine-header d-flex justify-content-between align-items-center mb-4">
-      <div class="game-info d-flex align-items-center gap-3">
+    <div class="engine-header d-flex flex-wrap justify-content-between align-items-center mb-3 mb-md-4 gap-2">
+      <div class="game-info d-flex align-items-center gap-2 gap-md-3">
         <div class="theme-icon-container">
           @if ((gameData()?.category || '').toLowerCase().includes('slot')) { <i class="bi bi-slot-machine text-warning fs-3"></i> }
           @else if ((gameData()?.category || '').toLowerCase().includes('crash')) { <i class="bi bi-graph-up-arrow text-info fs-3"></i> }
@@ -11,15 +11,15 @@
           @else { <i class="bi bi-suit-spade-fill text-danger fs-3"></i> }
         </div>
         <div>
-          <h2 class="m-0 text-uppercase fw-bold h4 text-warning" style="letter-spacing: 2px;">{{ gameData()?.title || 'Mini Juego' }}</h2>
-          <span class="badge rounded-pill border border-warning text-warning small">{{ gameData()?.category || 'General' }}</span>
+          <h2 class="m-0 text-uppercase fw-bold h5 h4-md text-warning" style="letter-spacing: 2px;">{{ gameData()?.title || 'Mini Juego' }}</h2>
+          <span class="badge rounded-pill border border-warning text-warning x-small">{{ gameData()?.category || 'General' }}</span>
         </div>
       </div>
       
-      <div class="d-flex align-items-center gap-3">
-        <div class="balance-display bg-dark rounded-pill border border-secondary px-3 py-1 d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 gap-md-3">
+        <div class="balance-display bg-dark rounded-pill border border-secondary px-2 px-md-3 py-1 d-flex align-items-center gap-2">
           <i class="bi bi-wallet2 text-warning"></i>
-          <span class="text-white fw-bold">${{ balance() | number:'1.2-2' }}</span>
+          <span class="text-white fw-bold small">${{ balance() | number:'1.2-2' }}</span>
         </div>
         <button class="btn btn-outline-danger btn-sm rounded-circle shadow-sm" (click)="exitGame.emit()">
           <i class="bi bi-x-lg"></i>
@@ -83,19 +83,50 @@
 
       <!-- 3. VISTA DE RULETA CIRCULAR -->
       @else if ((gameData()?.category || '').toLowerCase().includes('ruleta')) {
-        <div class="roulette-layout-circular text-center">
-          <div class="roulette-wheel-container">
-            <div class="roulette-arrow-side"></div>
-            <div class="roulette-wheel" [style.transform]="'rotate(-' + rouletteRotation() + 'deg)'">
-               <!-- Disco de la ruleta simplificado -->
-               <div class="wheel-center">
-                 <div class="wheel-logo">CASINO</div>
-               </div>
+        <div class="roulette-layout-circular text-center w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+          
+          <div class="row w-100 align-items-center">
+            <div class="col-12 col-lg-7 mb-4 mb-lg-0">
+              <div class="roulette-wheel-container">
+                <div class="roulette-arrow-side"></div>
+                <div class="roulette-wheel" [style.transform]="'rotate(-' + rouletteRotation() + 'deg)'">
+                   <div class="wheel-numbers">
+                     @for (num of ROULETTE_NUMS; track $index) {
+                       <div class="wheel-number-label" [style.transform]="'rotate(' + ($index * (360/37)) + 'deg) translateY(-145px)'">
+                         {{num}}
+                       </div>
+                     }
+                   </div>
+                   <div class="wheel-center">
+                     <div class="wheel-logo">NEON</div>
+                   </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12 col-lg-5">
+              <div class="number-selection-grid glass-panel p-3">
+                <h6 class="text-warning mb-3 text-uppercase small fw-bold">Elige tu número de la suerte</h6>
+                <div class="d-flex flex-wrap gap-1 justify-content-center">
+                  @for (n of [].constructor(37); track $index) {
+                    <button 
+                      class="btn btn-sm btn-number" 
+                      [class.btn-selected]="$index === selectedNumber()"
+                      [disabled]="rouletteActive()"
+                      (click)="setRouletteNumber($index)">
+                      {{$index}}
+                    </button>
+                  }
+                </div>
+                <div class="mt-3 text-white small opacity-75">
+                  Premios: Exacto (3x) | +/-1 (2x) | +/-2 (1x)
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg mt-4 w-100 py-3 shadow-lg glow-button-blue" (click)="spinRoulette()" [disabled]="rouletteActive()">
+                {{ rouletteActive() ? 'GIRANDO...' : 'GIRAR RULETA ($' + betAmount() + ')' }}
+              </button>
             </div>
           </div>
-          <button class="btn btn-primary btn-lg mt-4 w-100 py-3 shadow-lg" (click)="spinRoulette()" [disabled]="rouletteActive()">
-            GIRAR RULETA (${{betAmount()}})
-          </button>
         </div>
       }
 
@@ -108,10 +139,21 @@
             <div class="dealer-area mb-5">
               <div class="d-flex justify-content-center gap-2">
                 @for (card of dealerHand(); track $index) {
-                  <div class="playing-card fan-card animate-deal">
-                    <div class="card-inner" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
-                      <span class="card-val">{{card.value}}</span>
-                      <span class="card-suit text-center fs-2">{{card.suit}}</span>
+                  <div class="playing-card fan-card animate-deal" 
+                       [class.card-flipped]="card.hidden && dealerRevealed()">
+                    <div class="card-inner-wrapper">
+                      <!-- FRONT -->
+                      <div class="card-front" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
+                        <span class="card-val">{{card.value}}</span>
+                        <span class="card-suit text-center">{{card.suit}}</span>
+                      </div>
+                      <!-- BACK -->
+                      @if (card.hidden) {
+                        <div class="card-back">
+                          <div class="card-back-pattern"></div>
+                          <i class="bi bi-shield-shaded"></i>
+                        </div>
+                      }
                     </div>
                   </div>
                 }
@@ -127,9 +169,11 @@
               <div class="d-flex justify-content-center gap-2 mb-3">
                 @for (card of playerHand(); track $index) {
                   <div class="playing-card fan-card animate-deal">
-                    <div class="card-inner" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
-                      <span class="card-val">{{card.value}}</span>
-                      <span class="card-suit text-center fs-2">{{card.suit}}</span>
+                    <div class="card-inner-wrapper">
+                      <div class="card-front" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
+                        <span class="card-val">{{card.value}}</span>
+                        <span class="card-suit text-center">{{card.suit}}</span>
+                      </div>
                     </div>
                   </div>
                 }
@@ -158,21 +202,27 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="game-footer mt-auto pt-3 border-top border-secondary border-opacity-25">
-      <div class="alert bg-black border-secondary text-light d-flex justify-content-between align-items-center rounded-3 mb-3 p-2 px-3">
-         <span class="small" [innerHTML]="lastMessage()"></span>
-         @if (lastWin() > 0) {
-            <span class="badge bg-success animate-win fs-6">+${{lastWin()}}</span>
-         }
-      </div>
-
-      <div class="bet-selector d-flex align-items-center justify-content-center gap-4 bg-dark bg-opacity-50 p-2 rounded-pill shadow-sm">
-        <button class="btn btn-outline-secondary rounded-circle btn-sm py-1" (click)="adjustBet(-10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()">-</button>
-        <div class="text-center">
-           <small class="text-muted d-block" style="font-size: 0.6rem;">APUESTA ACTUAL</small>
-           <span class="fw-bold text-warning fs-5">${{betAmount()}}</span>
+    <div class="game-footer mt-auto pt-2 pt-md-3 border-top border-secondary border-opacity-25">
+      <div class="row g-2 mb-2 mb-md-3 align-items-center">
+        <div class="col-12 col-md-7">
+          <div class="alert bg-black border-secondary text-light d-flex justify-content-between align-items-center rounded-3 mb-0 p-2 px-3">
+             <span class="small" [innerHTML]="lastMessage()"></span>
+             @if (lastWin() > 0) {
+                <span class="badge bg-success animate-win fs-6">+${{lastWin()}}</span>
+             }
+          </div>
         </div>
-        <button class="btn btn-outline-secondary rounded-circle btn-sm py-1" (click)="adjustBet(10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()">+</button>
+        
+        <div class="col-12 col-md-5">
+          <div class="bet-selector d-flex align-items-center justify-content-center gap-3 bg-dark bg-opacity-50 p-2 rounded-pill shadow-sm">
+            <button class="btn btn-outline-secondary rounded-circle btn-sm py-1" (click)="adjustBet(-10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()">-</button>
+            <div class="text-center">
+               <small class="text-muted d-block" style="font-size: 0.6rem;">APUESTA</small>
+               <span class="fw-bold text-warning fs-6">${{betAmount()}}</span>
+            </div>
+            <button class="btn btn-outline-secondary rounded-circle btn-sm py-1" (click)="adjustBet(10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()">+</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
