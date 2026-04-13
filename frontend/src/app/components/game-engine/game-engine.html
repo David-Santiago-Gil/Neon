@@ -33,20 +33,42 @@
       <!-- 1. VISTA DE SLOTS CON PALANCA -->
       @if ((gameData()?.category || '').toLowerCase().includes('slot')) {
         <div class="slots-wrapper d-flex align-items-center justify-content-center w-100">
-          <div class="slots-layout position-relative">
-            <div class="slots-machine">
-              @for (column of reels(); track $index) {
-                <div class="reel-window">
-                  <div class="reel-strip" [class.spinning-fast]="isSpinning()">
-                    @for (s of column; track $index) {
-                      <div class="reel-symbol">{{s}}</div>
-                    }
-                  </div>
+            <div class="slots-layout d-flex align-items-center gap-3 position-relative">
+              <div class="slots-machine">
+                 <div class="machine-decor-left"></div>
+                 <div class="machine-decor-right"></div>
+                 <div class="machine-lights"></div>
+                 
+                 @for (column of reels(); track $index) {
+                   <div class="reel-window">
+                     <div class="reel-strip" [class.spinning-fast]="isSpinning()">
+                       @for (s of column; track $index) {
+                         <div class="reel-symbol">{{s}}</div>
+                       }
+                     </div>
+                     <div class="glass-reflection"></div>
+                   </div>
+                 }
+                 <div class="win-line"></div>
+                 <div class="jackpot-neon">JACKPOT</div>
+              </div>
+              
+              <!-- DECORATIVE PAY TABLE -->
+              <div class="side-pay-table d-none d-md-flex flex-column gap-2 opacity-75">
+                <div class="pay-item d-flex justify-content-between gap-4 border-bottom border-secondary border-opacity-25 pb-1">
+                  <span class="small font-monospace">🍒🍒🍒</span>
+                  <span class="text-warning small">5x</span>
                 </div>
-              }
-              <div class="win-line"></div>
+                <div class="pay-item d-flex justify-content-between gap-4 border-bottom border-secondary border-opacity-25 pb-1">
+                  <span class="small font-monospace">💎💎💎</span>
+                  <span class="text-warning small">10x</span>
+                </div>
+                <div class="pay-item d-flex justify-content-between gap-4">
+                  <span class="small font-monospace">🔔🔔🔔</span>
+                  <span class="text-warning small">3x</span>
+                </div>
+              </div>
             </div>
-          </div>
           
           <!-- PALANCA A LA DERECHA -->
           <div class="slot-lever-box" (click)="spinSlots()" [class.pulling]="isSpinning()">
@@ -160,13 +182,13 @@
               </div>
             </div>
 
-            <div class="action-zone text-center my-4">
-              <div class="badge bg-black bg-opacity-50 fs-5 px-4 py-2 border border-warning text-warning">VS</div>
+            <div class="action-zone text-center my-2 my-md-4">
+              <div class="badge bg-black bg-opacity-50 fs-6 fs-md-5 px-3 px-md-4 py-2 border border-warning text-warning">VS</div>
             </div>
 
             <!-- Jugador -->
             <div class="player-area">
-              <div class="d-flex justify-content-center gap-2 mb-3">
+              <div class="d-flex justify-content-center gap-1 gap-md-2 mb-2 mb-md-3">
                 @for (card of playerHand(); track $index) {
                   <div class="playing-card fan-card animate-deal">
                     <div class="card-inner-wrapper">
@@ -178,22 +200,22 @@
                   </div>
                 }
               </div>
-              <h5 class="text-white fw-bold mb-4">TUS PUNTOS: {{ getHandTotal(playerHand()) }}</h5>
+              <h6 class="text-white fw-bold mb-3 small-md">PUNTOS: {{ getHandTotal(playerHand()) }}</h6>
             </div>
 
             <!-- Botones SIEMPRE VISIBLES -->
-            <div class="d-flex gap-3 px-5">
+            <div class="d-flex flex-wrap flex-md-nowrap gap-2 gap-md-3 px-2 px-md-5">
               @if (!cardsActive() && !gameOver()) {
-                <button class="btn btn-warning btn-lg w-100 py-3 fw-bold shadow" (click)="playCards()">REPARTIR (${{betAmount()}})</button>
+                <button class="btn btn-warning btn-lg w-100 py-2 py-md-3 fw-bold shadow text-dark" (click)="playCards()">REPARTIR (${{betAmount()}})</button>
               } @else {
-                <button class="btn btn-info btn-lg flex-grow-1 py-3 fw-bold text-dark" 
-                  [disabled]="!cardsActive() || gameOver()" (click)="hitCard()">PEDIR CARTA</button>
-                <button class="btn btn-danger btn-lg flex-grow-1 py-3 fw-bold" 
-                  [disabled]="!cardsActive() || gameOver()" (click)="standCard()">PLANTARSE</button>
+                <button class="btn btn-info btn-lg flex-grow-1 py-2 py-md-3 fw-bold text-dark" 
+                  [disabled]="!cardsActive() || gameOver()" (click)="hitCard()">PEDIR</button>
+                <button class="btn btn-danger btn-lg flex-grow-1 py-2 py-md-3 fw-bold" 
+                  [disabled]="!cardsActive() || gameOver()" (click)="standCard()">PLANTAR</button>
               }
               
               @if (gameOver()) {
-                <button class="btn btn-warning btn-lg w-100 py-3 fw-bold mt-2" (click)="playCards()">JUGAR OTRA VEZ</button>
+                <button class="btn btn-warning btn-lg w-100 py-2 py-md-3 fw-bold mt-1 mt-md-2 text-dark" (click)="playCards()">REINTENTAR</button>
               }
             </div>
           </div>

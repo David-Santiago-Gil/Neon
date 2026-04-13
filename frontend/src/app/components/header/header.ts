@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { ScrollService } from '../../services/scroll.service';
 
 import { AuthService } from '../../services/auth.service';
@@ -16,6 +16,12 @@ export class HeaderComponent {
 
   openLogin = output<void>();
   openRegister = output<void>();
+  
+  isMenuOpen = signal<boolean>(false);
+
+  toggleMenu() {
+    this.isMenuOpen.update(v => !v);
+  }
 
   scrollTo(sectionId: string) {
     this.scrollService.scrollTo(sectionId);

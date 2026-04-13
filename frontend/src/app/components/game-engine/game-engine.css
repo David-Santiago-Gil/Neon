@@ -74,12 +74,29 @@
 
 .slots-machine {
   display: flex;
-  gap: 12px;
-  padding: 20px;
-  background: #222;
-  border: 8px solid #C9A84C;
+  gap: clamp(5px, 2vw, 12px);
+  padding: clamp(10px, 3vw, 25px);
+  background: linear-gradient(180deg, #111, #222);
+  border: clamp(4px, 1vw, 8px) solid #C9A84C;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 50px #000;
+  box-shadow: 
+    0 0 30px rgba(0,0,0,0.8),
+    inset 0 0 50px #000,
+    0 0 15px rgba(201, 168, 76, 0.3);
+  position: relative;
+}
+
+.slots-machine::before {
+  content: 'SLOT MACHINE';
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #C9A84C;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #C9A84C;
 }
 
 .reel-window {
@@ -140,10 +157,47 @@
   height: 40px;
   background: radial-gradient(circle at 30% 30%, #ff4d4d, #8b0000);
   border-radius: 50%;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 20px rgba(255, 77, 77, 0.4);
 }
 
 .pulling .lever-arm { transform: rotateX(70deg) translateY(40px); }
+
+/* SLOT DECORATIONS */
+.jackpot-neon {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  font-weight: 950;
+  color: #fff;
+  text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
+  letter-spacing: 5px;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.4; }
+}
+
+.glass-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
+
+.machine-decor-left, .machine-decor-right {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  width: 4px;
+  background: var(--gold-luxury);
+  box-shadow: 0 0 10px var(--gold-luxury);
+}
+.machine-decor-left { left: -10px; }
+.machine-decor-right { right: -10px; }
 
 /* ========================================= */
 /* RULETA CIRCULAR                           */
@@ -234,12 +288,19 @@
 .wheel-number-label {
   position: absolute;
   color: #fff;
-  font-weight: bold;
-  font-size: 0.65rem;
-  width: 20px;
-  text-align: center;
-  transform-origin: center bottom;
-  text-shadow: 0 0 5px rgba(0,0,0,0.8);
+  font-weight: 950;
+  font-size: 0.75rem;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid var(--gold-luxury);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5), inset 0 0 5px rgba(201, 168, 76, 0.2);
+  /* El transform se maneja en el HTML para el radio de giro */
+  z-index: 2;
 }
 
 .roulette-arrow-side {
@@ -262,16 +323,19 @@
 .felt-table {
   background: radial-gradient(circle, #076324 0%, #033c15 100%);
   border: clamp(5px, 2vw, 10px) solid #4a2c00;
-  min-height: 380px;
+  min-height: clamp(300px, 60vh, 450px);
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  padding: 10px;
+  justify-content: space-between;
+  padding: clamp(8px, 2vw, 25px); /* Reducido para móvil */
+  overflow: visible;
 }
 
+.dealer-area { margin-bottom: clamp(10px, 4vw, 40px); }
+
 .playing-card {
-  width: clamp(65px, 12vw, 90px);
-  height: clamp(95px, 18vw, 130px);
+  width: clamp(55px, 11vw, 85px);
+  height: clamp(80px, 16vw, 120px);
   background: transparent;
   perspective: 1000px;
   cursor: default;
@@ -283,6 +347,15 @@
   height: 100%;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
+}
+
+/* Fan Effect more subtle on mobile */
+.fan-card:nth-child(1) { transform: rotate(-5deg) translateY(5px); }
+.fan-card:nth-child(2) { transform: rotate(0deg); }
+.fan-card:nth-child(3) { transform: rotate(5deg) translateY(5px); }
+
+@media (max-width: 576px) {
+  .fan-card { transform: none !important; }
 }
 
 .card-flipped .card-inner-wrapper {

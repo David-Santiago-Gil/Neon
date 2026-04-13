@@ -12,19 +12,46 @@
       <a (click)="scrollTo('contacto')">Contacto</a>
     </nav>
 
-    <div class="auth-buttons d-flex gap-3">
-      @if (!authService.isAuthenticated()) {
-        <button class="btn btn-outline-light btn-sm px-3" (click)="openLogin.emit()">Login</button>
-        <button class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold" (click)="openRegister.emit()">Register</button>
-      } @else {
-        <span class="text-light" style="font-size:0.8rem; margin:auto">¡Hola, <b style="color:#C9A84C">{{authService.currentUser()?.usuario}}</b>!</span>
-        
-        @if (authService.currentUser()?.rol === 'admin') {
-          <button class="btn btn-warning btn-sm px-3 text-dark fw-bold" (click)="scrollTo('panel-admin')"><i class="bi bi-shield-lock-fill"></i> Panel VIP</button>
+    <div class="auth-buttons d-flex gap-3 align-items-center">
+      <div class="d-none d-lg-flex gap-3 align-items-center">
+        @if (!authService.isAuthenticated()) {
+          <button class="btn btn-outline-light btn-sm px-3" (click)="openLogin.emit()">Login</button>
+          <button class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold" (click)="openRegister.emit()">Register</button>
+        } @else {
+          <span class="text-light d-none d-xl-inline" style="font-size:0.8rem; margin:auto">¡Hola, <b style="color:#C9A84C">{{authService.currentUser()?.usuario}}</b>!</span>
+          <button class="btn btn-outline-light btn-sm px-3" (click)="authService.logout()">Cerrar Sesión</button>
         }
-        
-        <button class="btn btn-outline-light btn-sm px-3" (click)="authService.logout()">Cerrar Sesión</button>
-      }
+      </div>
+
+      <!-- BOTÓN HAMBURGUESA (MÓVIL) -->
+      <button class="btn-hamburger d-lg-none" (click)="toggleMenu()" [class.open]="isMenuOpen()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+  </div>
+
+  <!-- MENU MÓVIL OVERLAY -->
+  <div class="mobile-menu-overlay" [class.active]="isMenuOpen()">
+    <nav class="mobile-nav d-flex flex-column align-items-center justify-content-center gap-4">
+      <a (click)="scrollTo('hero'); toggleMenu()">Inicio</a>
+      <a (click)="scrollTo('juegos'); toggleMenu()">Juegos</a>
+      <a (click)="scrollTo('promociones'); toggleMenu()">Promociones</a>
+      <a (click)="scrollTo('contacto'); toggleMenu()">Contacto</a>
+      
+      <div class="mobile-auth-actions mt-4 d-flex flex-column gap-3 w-75 text-center">
+        @if (!authService.isAuthenticated()) {
+          <button class="btn btn-warning btn-lg w-100" (click)="openLogin.emit(); toggleMenu()">INICIAR SESIÓN</button>
+          <button class="btn btn-outline-light btn-lg w-100" (click)="openRegister.emit(); toggleMenu()">REGISTRARSE</button>
+        } @else {
+          <div class="profile-brief mb-2">
+             <i class="bi bi-person-circle fs-2 text-warning"></i>
+             <div class="text-white mt-1">{{authService.currentUser()?.usuario}}</div>
+          </div>
+          <button class="btn btn-danger btn-lg w-100" (click)="authService.logout(); toggleMenu()">CERRAR SESIÓN</button>
+        }
+      </div>
+    </nav>
   </div>
 </header>
