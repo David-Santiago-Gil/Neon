@@ -14,14 +14,7 @@ import { AuthService } from './services/auth.service';
   selector: 'app-root',
   imports: [CommonModule, FooterComponent, HeaderComponent, UsuariosComponent, AdminComponent, SoporteComponent, GameEngineComponent],
   templateUrl: './app.html',
-  styleUrls: [
-    './css/base.css',
-    './css/hero.css',
-    './css/sections.css',
-    './css/promo.css',
-    './css/contact.css',
-    './css/ui.css'
-  ]
+  styleUrls: ['./app.css']
 })
 export class App implements AfterViewInit {
   protected readonly title = signal('neon-royale-casino');

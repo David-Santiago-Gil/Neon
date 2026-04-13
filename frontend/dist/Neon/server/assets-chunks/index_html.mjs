@@ -147,7 +147,8 @@ body[_ngcontent-ng-c1049749640]::before {
     transform: translateX(100%);
   }
 }
-/*# sourceMappingURL=/base.css.map */</style><style ng-app-id="ng">
+
+
 .hero-section[_ngcontent-ng-c1049749640] {
   position: relative;
   min-height: 100vh;
@@ -183,7 +184,7 @@ body[_ngcontent-ng-c1049749640]::before {
   position: relative;
   z-index: 2;
   text-align: center;
-  animation: fadeInUp 1s ease-out;
+  animation: _ngcontent-ng-c1049749640_fadeInUp 1s ease-out;
 }
 .hero-title[_ngcontent-ng-c1049749640] {
   font-family: var(--font-display);
@@ -214,7 +215,8 @@ body[_ngcontent-ng-c1049749640]::before {
   justify-content: center;
   flex-wrap: wrap;
 }
-/*# sourceMappingURL=/hero.css.map */</style><style ng-app-id="ng">
+
+
 .parallax-divider[_ngcontent-ng-c1049749640] {
   position: relative;
   height: 70vh;
@@ -560,7 +562,7 @@ body[_ngcontent-ng-c1049749640]::before {
       transparent,
       rgba(255, 255, 255, 0.03),
       transparent);
-  animation: skeleton-sweep 1.5s infinite;
+  animation: _ngcontent-ng-c1049749640_skeleton-sweep 1.5s infinite;
 }
 @media (max-width: 1024px) {
   .rooms-grid[_ngcontent-ng-c1049749640] {
@@ -578,7 +580,8 @@ body[_ngcontent-ng-c1049749640]::before {
     grid-template-columns: 1fr;
   }
 }
-/*# sourceMappingURL=/sections.css.map */</style><style ng-app-id="ng">
+
+
 .promo-section[_ngcontent-ng-c1049749640] {
   padding: 160px 0;
   background: transparent;
@@ -766,7 +769,7 @@ body[_ngcontent-ng-c1049749640]::before {
       circle,
       rgba(201, 168, 76, 0.08) 0%,
       transparent 70%);
-  animation: pulse-large 6s ease-in-out infinite;
+  animation: _ngcontent-ng-c1049749640_pulse-large 6s ease-in-out infinite;
 }
 @media (max-width: 992px) {
   .promo-content[_ngcontent-ng-c1049749640] {
@@ -779,7 +782,8 @@ body[_ngcontent-ng-c1049749640]::before {
     margin-right: auto;
   }
 }
-/*# sourceMappingURL=/promo.css.map */</style><style ng-app-id="ng">
+
+
 .contact-section[_ngcontent-ng-c1049749640] {
   padding: 120px 0;
   background: var(--bg-darker);
@@ -883,7 +887,7 @@ body[_ngcontent-ng-c1049749640]::before {
   display: block;
   font-weight: 700;
   letter-spacing: 0.3px;
-  animation: errorAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: _ngcontent-ng-c1049749640_errorAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .input-error[_ngcontent-ng-c1049749640] {
   border-color: #ff3e3e !important;
@@ -896,7 +900,8 @@ body[_ngcontent-ng-c1049749640]::before {
     gap: 40px;
   }
 }
-/*# sourceMappingURL=/contact.css.map */</style><style ng-app-id="ng">
+
+
 .btn[_ngcontent-ng-c1049749640] {
   padding: 14px 36px;
   border: none;
@@ -941,7 +946,7 @@ body[_ngcontent-ng-c1049749640]::before {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  animation: fadeIn 0.3s ease;
+  animation: _ngcontent-ng-c1049749640_fadeIn 0.3s ease;
 }
 .modal-content[_ngcontent-ng-c1049749640] {
   background: var(--bg-card);
@@ -951,7 +956,7 @@ body[_ngcontent-ng-c1049749640]::before {
   max-width: 400px;
   width: 90%;
   position: relative;
-  animation: slideUp 0.3s ease;
+  animation: _ngcontent-ng-c1049749640_slideUp 0.3s ease;
 }
 .modal-close[_ngcontent-ng-c1049749640] {
   position: absolute;
@@ -1045,7 +1050,9 @@ body[_ngcontent-ng-c1049749640]::before {
     min-height: 350px;
   }
 }
-/*# sourceMappingURL=/ui.css.map */</style><style ng-app-id="ng">
+
+
+/*# sourceMappingURL=/app.css.map */</style><style ng-app-id="ng">
 [_nghost-ng-c3431066766] {
   display: block;
 }
