@@ -55,7 +55,6 @@ body::before {
     url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1280&q=50');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   z-index: -1;
   opacity: 0.35;
 }
@@ -1160,6 +1159,5 @@ body::before {
   .parallax-divider {
     height: 50vh;
     min-height: 350px;
-    background-attachment: scroll;
   }
 }
