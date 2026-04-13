@@ -1,12 +1,13 @@
 <div class="engine-overlay fade-in">
-  <!-- EL CONTENEDOR CAMBIA DE CLASE SEGÚN LA CATEGORÍA -->
   <div class="engine-container shadow-neon" [class]="'theme-' + (gameData()?.category || 'general').toLowerCase().split(' ')[0]">
-    <!-- HEADER DEL MOTOR -->
+    
+    <!-- HEADER -->
     <div class="engine-header d-flex justify-content-between align-items-center">
       <div class="game-info d-flex align-items-center gap-3">
         <div class="theme-icon-container">
           @if ((gameData()?.category || '').toLowerCase().includes('slot')) { <i class="bi bi-slot-machine text-warning fs-3"></i> }
           @else if ((gameData()?.category || '').toLowerCase().includes('crash')) { <i class="bi bi-graph-up-arrow text-info fs-3"></i> }
+          @else if ((gameData()?.category || '').toLowerCase().includes('ruleta')) { <i class="bi bi-disc text-info fs-3 animate-spin"></i> }
           @else { <i class="bi bi-suit-spade-fill text-danger fs-3"></i> }
         </div>
         <div>
@@ -25,93 +26,141 @@
       </button>
     </div>
 
-    <!-- AREA DEL TABLERO DE JUEGO -->
-    <div class="engine-board p-4 text-center my-3 relative glass-panel">
-      <!-- 1. VISTA DE SLOTS -->
-      @if ((gameData()?.category || '').toLowerCase() === 'slots' || (gameData()?.category || '').toLowerCase().includes('tragamoneda')) {
-        <div class="slots-area py-5">
-          <div class="reels-container d-flex justify-content-center gap-3">
-            @for (r of reels(); track $index) {
-              <div class="reel-box" [class.spinning]="isSpinning()">{{r}}</div>
+    <!-- TABLERO PRINCIPAL (CENTRADO Y UNIFORME) -->
+    <div class="engine-board glass-panel">
+      
+      <!-- 1. VISTA DE SLOTS (IMPRESIONANTE) -->
+      @if ((gameData()?.category || '').toLowerCase().includes('slot')) {
+        <div class="slots-layout">
+          <div class="slots-machine">
+            @for (column of reels(); track $index) {
+              <div class="reel-window">
+                <div class="reel-strip" [class.spinning-fast]="isSpinning()">
+                  @for (s of column; track $index) {
+                    <div class="reel-symbol">{{s}}</div>
+                  }
+                </div>
+              </div>
             }
+            <div class="win-line"></div>
           </div>
-          <div class="mt-4">
-            <button class="btn btn-warning fs-4 px-5 shadow fw-bold p-3" (click)="spinSlots()" [disabled]="isSpinning()">
-              GIRAR (${{betAmount()}})
-            </button>
-          </div>
+          <button class="btn btn-warning btn-lg mt-4 w-100 fw-bold sparkle-btn" (click)="spinSlots()" [disabled]="isSpinning()">
+            GIRAR (${{betAmount()}})
+          </button>
         </div>
       }
 
       <!-- 2. VISTA DE CRASH -->
-      @else if ((gameData()?.category || '').toLowerCase() === 'crash') {
-        <div class="crash-area py-5">
-          <div class="crash-graph display-1 fw-bold text-white mb-4" [class.text-danger]="hasCrashed()" [class.text-success]="crashActive() && !hasCrashed()">
-            {{ crashMultiplier() | number:'1.2-2' }}x
+      @else if ((gameData()?.category || '').toLowerCase().includes('crash')) {
+        <div class="crash-layout">
+          <div class="crash-display" [class.crashed-shake]="hasCrashed()">
+            <div class="multiplier-text" [class.text-danger]="hasCrashed()" [class.text-success]="crashActive()">
+              {{ crashMultiplier() | number:'1.2-2' }}x
+            </div>
+            <div class="crash-subtext">{{ hasCrashed() ? '¡BOOM!' : 'PROCESANDO MULTIPLICADOR...' }}</div>
           </div>
-          
-          <div class="mt-4">
+          <div class="actions mt-4">
             @if (!crashActive() && !hasCrashed()) {
-              <button class="btn btn-warning fs-4 px-5 shadow fw-bold p-3" (click)="playCrash()">APOSTAR (${{betAmount()}})</button>
+              <button class="btn btn-warning w-100 p-3 fw-bold" (click)="playCrash()">APOSTAR (${{betAmount()}})</button>
             }
             @if (crashActive()) {
-              <button class="btn btn-success fs-4 px-5 shadow fw-bold p-3 pulse" (click)="cashOut()">¡RETIRARSE AHORA!</button>
+              <button class="btn btn-success w-100 p-3 fw-bold pulse" (click)="cashOut()">RETIRARSE ({{ (betAmount() * crashMultiplier()) | number:'1.2-2' }})</button>
             }
             @if (hasCrashed()) {
-              <button class="btn btn-danger fs-4 px-5 shadow fw-bold p-3" (click)="playCrash()">VOLVER A INTENTAR</button>
+              <button class="btn btn-danger w-100 p-3 fw-bold" (click)="playCrash()">REINTENTAR</button>
             }
           </div>
         </div>
       }
 
-      <!-- 3. VISTA DE CARTAS / MESA / OTROS -->
-      @else {
-        <div class="cards-area py-5">
-          <div class="dealer-zone mb-4 p-3 bg-dark bg-opacity-50 rounded">
-            <span class="text-secondary small d-block mb-2">Crupier (Mesa)</span>
-            <div class="display-4 fw-bold mb-0 text-white">
-              {{ dealerTotal() === 0 ? '?' : dealerTotal() }}
+      <!-- 3. VISTA DE RULETA (HORIZONTAL TAPE) -->
+      @else if ((gameData()?.category || '').toLowerCase().includes('ruleta')) {
+        <div class="roulette-layout">
+          <div class="roulette-viewport">
+            <div class="roulette-needle"></div>
+            <div class="roulette-tape" [style.transform]="'translateX(-' + rouletteOffset() + 'px)'" [class.spinning-tape]="rouletteActive()">
+              @for (num of rouletteTape(); track $index) {
+                <div class="roulette-num" [class.num-red]="num % 2 !== 0 && num !== 0" [class.num-black]="num % 2 === 0 && num !== 0" [class.num-zero]="num === 0">
+                  {{num}}
+                </div>
+              }
             </div>
           </div>
-          
-          <div class="player-zone mb-4 p-3 bg-dark bg-opacity-75 rounded border border-warning">
-            <span class="text-warning small d-block mb-2">Tu Mano</span>
-            <div class="display-3 fw-bold mb-0" [class.text-danger]="playerTotal() > 21" [class.text-success]="playerTotal() <= 21 && playerTotal() > 0">
-              {{ playerTotal() === 0 ? '?' : playerTotal() }}
+          <button class="btn btn-info mt-5 w-100 fw-bold p-3" (click)="spinRoulette()" [disabled]="rouletteActive()">
+            Lanzar Ruleta (${{betAmount()}})
+          </button>
+        </div>
+      }
+
+      <!-- 4. VISTA DE CARTAS (CON CARTAS VISUALES) -->
+      @else {
+        <div class="cards-layout">
+          <!-- Dealer Hand -->
+          <div class="hand-section dealer-side">
+            <h5 class="text-uppercase small text-muted">Crupier</h5>
+            <div class="card-container">
+              @for (card of dealerHand(); track $index) {
+                <div class="playing-card fan-card animate-deal">
+                  <div class="card-inner" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
+                    <span class="card-val">{{card.value}}</span>
+                    <span class="card-suit">{{card.suit}}</span>
+                  </div>
+                </div>
+              }
             </div>
           </div>
 
-          <div class="mt-4">
-            @if (!cardsActive() && !gameOver()) {
-              <button class="btn btn-warning fs-4 px-5 shadow fw-bold p-3" (click)="playCards()">INICIAR PARTIDA (${{betAmount()}})</button>
-            }
-            @if (cardsActive() && !gameOver()) {
-              <div class="d-flex justify-content-center gap-3">
-                <button class="btn btn-info px-4 py-3 fw-bold text-dark fs-5" (click)="hitCard()">PEDIR CARTA</button>
-                <button class="btn btn-danger px-4 py-3 fw-bold fs-5" (click)="standCard()">QUEDARSE</button>
-              </div>
-            }
-            @if (gameOver()) {
-              <button class="btn btn-warning fs-4 px-5 shadow fw-bold p-3" (click)="playCards()">VOLVER A JUGAR</button>
-            }
+          <div class="hand-divider">VS</div>
+
+          <!-- Player Hand -->
+          <div class="hand-section player-side">
+            <div class="card-container">
+              @for (card of playerHand(); track $index) {
+                <div class="playing-card fan-card animate-deal">
+                  <div class="card-inner" [class.card-red]="card.suit === '♥️' || card.suit === '♦️'">
+                    <span class="card-val">{{card.value}}</span>
+                    <span class="card-suit">{{card.suit}}</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <h5 class="text-uppercase text-warning mt-2 fw-bold">Tu Mano: {{ getHandTotal(playerHand()) }}</h5>
+          </div>
+
+          <div class="actions mt-3">
+             @if (!cardsActive() && !gameOver()) {
+               <button class="btn btn-warning w-100" (click)="playCards()">REPARTIR (${{betAmount()}})</button>
+             }
+             @if (cardsActive()) {
+               <div class="d-flex gap-2">
+                 <button class="btn btn-info flex-grow-1" (click)="hitCard()">PEDIR</button>
+                 <button class="btn btn-danger flex-grow-1" (click)="standCard()">PLANTARSE</button>
+               </div>
+             }
+             @if (gameOver()) {
+               <button class="btn btn-warning w-100" (click)="playCards()">VOLVER A JUGAR</button>
+             }
           </div>
         </div>
       }
     </div>
 
-    <!-- CONSOLA DE ESTADO Y APUESTAS -->
-    <div class="engine-footer d-flex flex-column align-items-center">
-      <div class="console-box text-center p-3 w-100 rounded bg-dark border border-secondary mb-3">
-        <span class="text-light" [innerHTML]="lastMessage()"></span>
-        @if (lastWin() > 0) {
-           <p class="text-success m-0 fw-bold animate-drop">+${{lastWin()}} Acreditados</p>
-        }
+    <!-- FOOTER: APUESTAS Y MENSAJES -->
+    <div class="game-footer">
+      <div class="message-ticker">
+         <div class="ticker-content" [innerHTML]="lastMessage()"></div>
+         @if (lastWin() > 0) {
+            <div class="win-burst animate-win">+${{lastWin()}}</div>
+         }
       </div>
 
-      <div class="bet-controls d-flex align-items-center gap-3 bg-black p-2 rounded-pill">
-        <button class="btn btn-dark rounded-circle" (click)="adjustBet(-10)" [disabled]="isSpinning() || crashActive() || cardsActive()"><i class="bi bi-dash"></i></button>
-        <span class="text-warning fw-bold px-2">Apuesta: ${{betAmount()}}</span>
-        <button class="btn btn-dark rounded-circle" (click)="adjustBet(10)" [disabled]="isSpinning() || crashActive() || cardsActive()"><i class="bi bi-plus"></i></button>
+      <div class="bet-panel d-flex align-items-center justify-content-between p-2 rounded-pill bg-dark border border-secondary">
+        <button class="btn btn-dark circle-btn" (click)="adjustBet(-10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()"><i class="bi bi-dash"></i></button>
+        <div class="bet-info text-center">
+           <span class="d-block small text-muted">Apostar</span>
+           <span class="fw-bold text-warning fs-5">${{betAmount()}}</span>
+        </div>
+        <button class="btn btn-dark circle-btn" (click)="adjustBet(10)" [disabled]="isSpinning() || crashActive() || cardsActive() || rouletteActive()"><i class="bi bi-plus"></i></button>
       </div>
     </div>
   </div>

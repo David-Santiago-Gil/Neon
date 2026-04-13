@@ -1,160 +1,319 @@
-/* UNIFIED GAME ENGINE STYLES - OPTIMIZED */
+/* GAME ENGINE: MASTER RE-DESIGN */
 
 .engine-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(4, 4, 8, 0.92);
-  backdrop-filter: blur(8px); /* Reducido de 15px para rendimiento */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(12px);
   z-index: 100000;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Inter', sans-serif;
-  will-change: opacity;
+  padding: 20px;
 }
 
 .engine-container {
-  width: 95%;
-  max-width: 900px;
-  height: 90vh;
-  max-height: 800px;
-  border-radius: 20px;
+  width: 100%;
+  max-width: 950px;
+  height: min(90vh, 850px);
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
+  padding: 25px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  overflow: hidden;
+  position: relative;
+}
+
+.engine-header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.engine-board {
+  flex: 1;
+  margin: 20px 0;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 4px 30px rgba(0,0,0,0.5);
+}
+
+/* ========================================= */
+/* SLOTS 3D (IMPRESIONANTE)                  */
+/* ========================================= */
+.slots-layout {
+  width: 100%;
+  max-width: 600px;
+  perspective: 1000px;
+}
+
+.slots-machine {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
   padding: 20px;
-  position: relative;
-  overflow-y: auto;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, background;
-}
-
-.shadow-neon {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-}
-
-/* ========================================= */
-/* THEME: SLOTS (LAS VEGAS LUXURY)           */
-/* ========================================= */
-.theme-slots {
-  background: linear-gradient(135deg, #1a0b2e 0%, #0b0b0f 100%);
-  border: 2px solid #C9A84C;
-  box-shadow: 0 0 40px rgba(201, 168, 76, 0.3), inset 0 0 20px rgba(0,0,0,0.8);
-}
-
-.theme-slots .engine-header { border-bottom: 2px solid rgba(201,168,76, 0.4); }
-.theme-slots .reel-box {
-  background: linear-gradient(180deg, #3d2a5a 0%, #150a25 100%);
-  border: 4px solid #C9A84C;
-  color: #FFD700;
-  text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 30px rgba(255,215,0,0.4);
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(201,168,76, 0.2);
-}
-
-/* ========================================= */
-/* THEME: CRASH (CYBERPUNK RADAR)            */
-/* ========================================= */
-.theme-crash {
-  background: #020204;
-  border: 2px solid #00d4ff;
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 70%),
-    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
-  box-shadow: 0 0 40px rgba(0, 212, 255, 0.2), inset 0 0 50px rgba(0,0,0,1);
-}
-
-.theme-crash .crash-graph {
-  font-family: 'Courier New', Courier, monospace;
-  color: #00ffcc;
-  text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
-  font-size: 6rem;
-  letter-spacing: -4px;
-}
-
-.theme-crash .badge { 
-  background: #00d4ff; 
-  color: #000; 
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-}
-
-/* ========================================= */
-/* THEME: CARTAS / GENERAL (ROYAL CASINO)    */
-/* ========================================= */
-.theme-cartas, .theme-poker, .theme-blackjack, .theme-mesa, .theme-general {
-  background: radial-gradient(circle at center, #0e3d2a 0%, #05140e 100%);
-  border: 3px solid #b38b2e;
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.7), 0 20px 40px rgba(0,0,0,0.8);
-}
-
-.theme-cartas .player-zone, .theme-poker .player-zone, .theme-blackjack .player-zone {
-  background: rgba(0,0,0,0.5);
-  border: 1px solid #C9A84C;
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(201,168,76, 0.15);
+  background: linear-gradient(180deg, #111 0%, #333 50%, #111 100%);
+  border: 10px solid #C9A84C;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.3), inset 0 0 50px #000;
   position: relative;
 }
 
-.theme-cartas .player-zone::after {
-  content: "ESPERANDO CARTAS...";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.6rem;
-  color: #C9A84C;
-  letter-spacing: 2px;
-}
-
-/* COMPONENTES INTERNOS */
-.reel-box {
+.reel-window {
   width: 120px;
-  height: 140px;
+  height: 150px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+}
+
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 2s cubic-bezier(0.1, 0, 0.1, 1);
+}
+
+.reel-symbol {
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 5rem;
+}
+
+.spinning-fast {
+  animation: reelScroll 0.2s linear infinite;
+}
+
+@keyframes reelScroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-300px); }
+}
+
+.win-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 10px red;
+  z-index: 3;
+}
+
+/* ========================================= */
+/* RULETA HORIZONTAL (CINEMÁTICA)            */
+/* ========================================= */
+.roulette-layout {
+  width: 100%;
+  padding: 40px;
+}
+
+.roulette-viewport {
+  width: 100%;
+  height: 100px;
+  background: #111;
+  border: 4px solid #00d4ff;
   border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.roulette-needle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: #fff;
+  z-index: 10;
+  box-shadow: 0 0 15px #00d4ff;
+  transform: translateX(-50%);
+}
+
+.roulette-tape {
+  display: flex;
+  height: 100%;
+  transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
   will-change: transform;
 }
 
-.spinning {
-  animation: blurVibrate 0.1s infinite;
-  filter: blur(2px);
+.roulette-num {
+  min-width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-@keyframes blurVibrate {
-  0% { transform: translateY(-3px); }
-  50% { transform: translateY(3px); }
-  100% { transform: translateY(-3px); }
+.num-red { background: #b22222; }
+.num-black { background: #1a1a1a; }
+.num-zero { background: #228b22; }
+
+/* ========================================= */
+/* CARTAS VISUALES                           */
+/* ========================================= */
+.cards-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.pulse { animation: pulser 0.8s infinite; will-change: transform, box-shadow; }
-
-@keyframes pulser {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.03); box-shadow: 0 0 15px rgba(40, 167, 69, 0.4); }
-  100% { transform: scale(1); }
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: -20px;
+  min-height: 180px;
+  padding: 10px;
 }
 
-.animate-drop { animation: dropIn 0.3s ease-out forwards; }
-@keyframes dropIn {
-  0% { opacity: 0; transform: translateY(-10px); }
-  100% { opacity: 1; transform: translateY(0); }
+.playing-card {
+  width: 110px;
+  height: 160px;
+  background: #fff;
+  border-radius: 10px;
+  margin: 0 -15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.1);
+  position: relative;
+  border: 1px solid #ddd;
 }
 
-.fade-in { animation: fadeIn 0.3s forwards; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card-inner {
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #1a1a1a;
+}
 
-.scroll-elegante::-webkit-scrollbar { width: 6px; }
-.scroll-elegante::-webkit-scrollbar-track { background: transparent; }
-.scroll-elegante::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+.card-red { color: #d00; }
+
+.card-val { font-size: 2rem; font-weight: 900; line-height: 1; }
+.card-suit { font-size: 3rem; text-align: center; }
+
+.animate-deal {
+  animation: dealFlight 0.5s ease-out forwards;
+}
+
+@keyframes dealFlight {
+  from { opacity: 0; transform: translate(300px, -300px) rotate(45deg); }
+  to { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+
+.hand-divider {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--gold-luxury);
+  margin: 15px 0;
+  text-shadow: 0 0 10px gold;
+}
+
+/* ========================================= */
+/* CRASH IMPROVED                            */
+/* ========================================= */
+.crash-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.multiplier-text {
+  font-size: 8rem;
+  font-weight: 900;
+  font-family: 'Outfit';
+  line-height: 1;
+}
+
+.crashed-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* ========================================= */
+/* FOOTER & MISC                             */
+/* ========================================= */
+.game-footer {
+  margin-top: 10px;
+}
+
+.message-ticker {
+  background: #000;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border-left: 4px solid var(--gold-luxury);
+  margin-bottom: 15px;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-content { color: #fff; font-size: 0.9rem; }
+
+.win-burst {
+  position: absolute;
+  right: 20px;
+  color: #0f0;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.animate-win {
+  animation: winPulse 0.5s infinite;
+}
+
+@keyframes winPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.1); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.circle-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sparkle-btn {
+  background: linear-gradient(90deg, #C9A84C, #fff, #C9A84C);
+  background-size: 200%;
+  animation: sparkle-sweep 2s linear infinite;
+  color: #000;
+}
+
+@keyframes sparkle-sweep {
+  to { background-position: 200%; }
+}
+
+/* RESPONSIVE FIXES */
+@media (max-width: 600px) {
+  .reel-window { width: 80px; height: 100px; }
+  .reel-symbol { height: 100px; font-size: 3rem; }
+  .playing-card { width: 80px; height: 120px; }
+  .multiplier-text { font-size: 4rem; }
+  .engine-container { height: 95vh; padding: 15px; }
+}

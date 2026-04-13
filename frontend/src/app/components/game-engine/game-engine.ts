@@ -1,7 +1,15 @@
 import { Component, input, output, signal, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-const SYMBOLS = ['🍒', '💎', '🔔', '7️⃣', '🎰'];
+const SYMBOLS = ['🍒', '💎', '🔔', '7️⃣', '🎰', '🍋', '🍉', '🍇', '⭐'];
+const SUITS = ['♥️', '♦️', '♣️', '♠️'];
+const VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+interface Card {
+  value: string;
+  suit: string;
+  points: number;
+}
 
 @Component({
   selector: 'app-game-engine',
@@ -11,60 +19,58 @@ const SYMBOLS = ['🍒', '💎', '🔔', '7️⃣', '🎰'];
   styleUrl: './game-engine.css'
 })
 export class GameEngineComponent implements OnDestroy {
-  // Input: { title: "Blackjack", category: "Cartas" }
   gameData = input<{title: string, category: string}>();
-  // Output para cerrar la ventana
   exitGame = output<void>();
 
-  // SALDO VIRTUAL COMPARTIDO
   balance = signal<number>(1000);
   betAmount = signal<number>(10);
   lastMessage = signal<string>('Bienvenido. Haz tu apuesta.');
   lastWin = signal<number>(0);
 
-  // ===================== LÓGICA DE SLOTS =====================
-  reels = signal<string[]>(['❓', '❓', '❓']);
+  // ===================== LÓGICA DE SLOTS (Mejorado) =====================
+  reels = signal<string[][]>([['❓'], ['❓'], ['❓']]);
   isSpinning = signal<boolean>(false);
 
-  spinSlots() {
+  async spinSlots() {
     if (this.balance() < this.betAmount()) return this.setMsg('Fondos insuficientes');
     this.balance.update(b => b - this.betAmount());
     this.isSpinning.set(true);
     this.lastWin.set(0);
-    this.setMsg('Girando...');
+    this.setMsg('Girando la suerte...');
     
-    let spins = 0;
-    const interval = setInterval(() => {
-      this.reels.set([
-        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
-      ]);
-      spins++;
-      if (spins > 10) {
-        clearInterval(interval);
-        this.isSpinning.set(false);
-        this.checkSlotWin();
-      }
-    }, 100);
+    // Generar secuencias de símbolos para el efecto de scroll
+    const newReels: string[][] = [];
+    for (let i = 0; i < 3; i++) {
+       const column: string[] = [];
+       for (let j = 0; j < 20; j++) {
+         column.push(SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]);
+       }
+       newReels.push(column);
+    }
+    this.reels.set(newReels);
+
+    await this.delay(2000); // Duración del giro visual
+    
+    this.isSpinning.set(false);
+    // Verificar victoria basado en el último elemento de cada columna
+    this.checkSlotWin();
   }
 
   checkSlotWin() {
-    const finalReels = this.reels();
-    if (finalReels[0] === finalReels[1] && finalReels[1] === finalReels[2]) {
-      // Jackpot
-      let prize = finalReels[0] === '💎' ? this.betAmount() * 50 : this.betAmount() * 10;
+    const final = this.reels().map(r => r[r.length - 1]);
+    if (final[0] === final[1] && final[1] === final[2]) {
+      let extra = final[0] === '💎' ? 50 : final[0] === '🎰' ? 25 : 10;
+      let prize = this.betAmount() * extra;
       this.balance.update(b => b + prize);
       this.lastWin.set(prize);
-      this.setMsg(`¡JACKPOT! Ganaste $${prize}`);
-    } else if (finalReels[0] === finalReels[1] || finalReels[1] === finalReels[2]) {
-      // 2 coincidencias simples
-      let prize = this.betAmount() * 2;
-      this.balance.update(b => b + prize);
-      this.lastWin.set(prize);
-      this.setMsg(`Ganancia menor: $${prize}`);
+      this.setMsg(`¡INCREÍBLE! Combinación de ${final[0]}. Ganaste $${prize}`);
+    } else if (final[0] === final[1] || final[1] === final[2] || final[0] === final[2]) {
+       let prize = this.betAmount() * 2;
+       this.balance.update(b => b + prize);
+       this.lastWin.set(prize);
+       this.setMsg(`¡Par de ${final[1]}! Ganancia: $${prize}`);
     } else {
-      this.setMsg('Suerte a la próxima');
+      this.setMsg('Casi lo tienes. Intenta de nuevo.');
     }
   }
 
@@ -84,18 +90,17 @@ export class GameEngineComponent implements OnDestroy {
     this.lastWin.set(0);
     this.setMsg('Volando... presiona "Retirarse" antes de explotar.');
 
-    // Determinar cuando crashea (mayormente entre 1.00 y 3.00, pero podría subir más)
-    this.crashTarget = 1.00 + (Math.random() * Math.random() * 5); // Pesado hacia números bajos
+    this.crashTarget = 1.00 + (Math.random() * Math.random() * 8); // Más volátil
 
     this.crashInterval = setInterval(() => {
-      this.crashMultiplier.update(m => m + 0.03);
+      this.crashMultiplier.update(m => m + 0.02);
       if (this.crashMultiplier() >= this.crashTarget) {
         clearInterval(this.crashInterval);
         this.crashActive.set(false);
         this.hasCrashed.set(true);
-        this.setMsg('¡CRASHED! Perdiste la apuesta.');
+        this.setMsg('¡EXPLOTÓ! Suerte la próxima.');
       }
-    }, 50);
+    }, 40);
   }
 
   cashOut() {
@@ -105,95 +110,174 @@ export class GameEngineComponent implements OnDestroy {
     let prize = parseFloat((this.betAmount() * this.crashMultiplier()).toFixed(2));
     this.balance.update(b => b + prize);
     this.lastWin.set(prize);
-    this.setMsg(`¡Retirado con éxito a ${this.crashMultiplier().toFixed(2)}x! Ganancia: $${prize}`);
+    this.setMsg(`¡Retirada Exitosa! Ganancia de $${prize}`);
   }
 
-  // ===================== LÓGICA DE CARTAS (Blackjack Simplificado) =====================
-  playerTotal = signal<number>(0);
-  dealerTotal = signal<number>(0);
+  // ===================== LÓGICA DE RULETA (Horizontal Tape) =====================
+  rouletteActive = signal<boolean>(false);
+  rouletteTape = signal<number[]>([]);
+  winningNumber = signal<number | null>(null);
+  rouletteOffset = signal<number>(0);
+
+  async spinRoulette() {
+    if (this.balance() < this.betAmount()) return this.setMsg('Fondos insuficientes');
+    if (this.rouletteActive()) return;
+
+    this.balance.update(b => b - this.betAmount());
+    this.rouletteActive.set(true);
+    this.lastWin.set(0);
+    this.setMsg('Hagan sus apuestas... ¡Girando!');
+
+    // Generar cinta de 80 números
+    const tape: number[] = [];
+    for (let i = 0; i < 80; i++) {
+      tape.push(Math.floor(Math.random() * 37));
+    }
+    this.rouletteTape.set(tape);
+
+    // El ganador es el número en la posición 75 (para que ruede bastante)
+    const winner = tape[75];
+    this.winningNumber.set(null);
+    
+    // Animación visual de desplazamiento (offset)
+    // 75 números * 80px cada número aprox
+    this.rouletteOffset.set(75 * 80);
+
+    await this.delay(5000); // Tiempo del giro cinemático
+    
+    this.rouletteActive.set(false);
+    this.winningNumber.set(winner);
+
+    // Lógica simple: Ganas si el número es par o si es el 0 (suerte extrema)
+    if (winner === 0) {
+       let prize = this.betAmount() * 35;
+       this.balance.update(b => b + prize);
+       this.lastWin.set(prize);
+       this.setMsg(`¡CERO REAL! Increíble premio de $${prize}`);
+    } else if (winner % 2 === 0) {
+       let prize = this.betAmount() * 2;
+       this.balance.update(b => b + prize);
+       this.lastWin.set(prize);
+       this.setMsg(`¡Rojo/Par gana! Número ${winner}. Ganancia: $${prize}`);
+    } else {
+       this.setMsg(`Salió el ${winner}. Gana la casa.`);
+    }
+  }
+
+  // ===================== LÓGICA DE CARTAS (Visual Hands) =====================
+  playerHand = signal<Card[]>([]);
+  dealerHand = signal<Card[]>([]);
   cardsActive = signal<boolean>(false);
   gameOver = signal<boolean>(false);
 
-  getRandomCardValue(): number {
-    // 2-11
-    return Math.floor(Math.random() * 10) + 2;
+  createCard(): Card {
+    const v = VALUES[Math.floor(Math.random() * VALUES.length)];
+    const s = SUITS[Math.floor(Math.random() * SUITS.length)];
+    let points = parseInt(v);
+    if (isNaN(points)) points = v === 'A' ? 11 : 10;
+    return { value: v, suit: s, points };
   }
 
-  playCards() {
+  getHandTotal(hand: Card[]): number {
+    let total = hand.reduce((acc, c) => acc + c.points, 0);
+    // Ajustar Ases
+    let aces = hand.filter(c => c.value === 'A').length;
+    while (total > 21 && aces > 0) {
+      total -= 10;
+      aces--;
+    }
+    return total;
+  }
+
+  async playCards() {
     if (this.balance() < this.betAmount()) return this.setMsg('Fondos insuficientes');
     this.balance.update(b => b - this.betAmount());
     this.cardsActive.set(true);
     this.gameOver.set(false);
     this.lastWin.set(0);
+    this.playerHand.set([]);
+    this.dealerHand.set([]);
 
-    this.playerTotal.set(this.getRandomCardValue() + this.getRandomCardValue());
-    this.dealerTotal.set(this.getRandomCardValue()); // Solo muestra una
-    this.setMsg(this.playerTotal() === 21 ? '¡BLACKJACK Inmediato!' : 'Elige: Pedir o Quedarte');
+    // Reparto inicial con delay para "vuelo"
+    this.setMsg('Repartiendo cartas...');
+    await this.addCard('player');
+    await this.addCard('dealer');
+    await this.addCard('player');
+
+    const pTotal = this.getHandTotal(this.playerHand());
+    if (pTotal === 21) {
+      this.resolveCards();
+    } else {
+      this.setMsg(`Tienes ${pTotal}. ¿Pides o te quedas?`);
+    }
+  }
+
+  async addCard(who: 'player' | 'dealer') {
+    await this.delay(400); // Delay de vuelo
+    const card = this.createCard();
+    if (who === 'player') this.playerHand.update(h => [...h, card]);
+    else this.dealerHand.update(h => [...h, card]);
+  }
+
+  async hitCard() {
+    if (!this.cardsActive() || this.gameOver()) return;
+    await this.addCard('player');
+    const total = this.getHandTotal(this.playerHand());
+    if (total > 21) {
+       this.resolveCards();
+    } else {
+       this.setMsg(`Total: ${total}. ¿Otra?`);
+    }
+  }
+
+  async standCard() {
+    if (!this.cardsActive() || this.gameOver()) return;
+    this.setMsg('Turno del Crupier...');
     
-    if (this.playerTotal() === 21) {
-      this.resolveCardsWrapUp();
+    let dTotal = this.getHandTotal(this.dealerHand());
+    while (dTotal < 17) {
+      await this.addCard('dealer');
+      dTotal = this.getHandTotal(this.dealerHand());
     }
+    this.resolveCards();
   }
 
-  hitCard() {
-    if (!this.cardsActive() || this.gameOver()) return;
-    this.playerTotal.update(p => p + this.getRandomCardValue());
-    if (this.playerTotal() > 21) {
-      this.cardsActive.set(false);
-      this.gameOver.set(true);
-      this.setMsg('¡Te pasaste de 21! Gana la casa.');
-    }
-  }
-
-  standCard() {
-    if (!this.cardsActive() || this.gameOver()) return;
-    let dealer = this.dealerTotal();
-    while (dealer < 17) {
-      dealer += this.getRandomCardValue();
-    }
-    this.dealerTotal.set(dealer);
-    this.resolveCardsWrapUp();
-  }
-
-  resolveCardsWrapUp() {
+  resolveCards() {
     this.cardsActive.set(false);
     this.gameOver.set(true);
-    const p = this.playerTotal();
-    const d = this.dealerTotal();
+    const p = this.getHandTotal(this.playerHand());
+    const d = this.getHandTotal(this.dealerHand());
 
-    if (p === 21 && d !== 21) { // Blackjack natural asumiendo q si saca 21 gana
-       let prize = this.betAmount() * 2.5; 
-       this.balance.update(b => b + prize);
-       this.lastWin.set(prize);
-       this.setMsg(`¡Blackjack! Ganaste $${prize}`);
-    } else if (p > 21) {
-       this.setMsg('Perdiste.');
+    if (p > 21) {
+      this.setMsg('¡Te pasaste! La casa gana.');
     } else if (d > 21 || p > d) {
-       let prize = this.betAmount() * 2;
+       let prize = p === 21 && this.playerHand().length === 2 ? this.betAmount() * 2.5 : this.betAmount() * 2;
        this.balance.update(b => b + prize);
        this.lastWin.set(prize);
-       this.setMsg(`¡Le ganaste a la casa! Reclama $${prize}`);
+       this.setMsg(`¡Ganaste! ${p} vs ${d}. Premio: $${prize}`);
     } else if (p === d) {
        this.balance.update(b => b + this.betAmount());
-       this.setMsg(`Empate. Se devuelve tu apuesta de $${this.betAmount()}`);
+       this.setMsg('Empate técnico. Recuperas tu apuesta.');
     } else {
-       this.setMsg(`La casa gana (${d} vs ${p}).`);
+       this.setMsg(`La casa gana con ${d}.`);
     }
   }
 
   // ===================== GENERALES =====================
-
   setMsg(text: string) {
     this.lastMessage.set(text);
   }
 
   adjustBet(amount: number) {
-    if (this.isSpinning() || this.crashActive() || this.cardsActive()) return;
-    
+    if (this.isSpinning() || this.crashActive() || this.cardsActive() || this.rouletteActive()) return;
     let current = this.betAmount() + amount;
     if (current < 10) current = 10;
     if (current > 500) current = 500;
     this.betAmount.set(current);
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   ngOnDestroy() {
